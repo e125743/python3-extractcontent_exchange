@@ -2,11 +2,12 @@
 # -*- encoding:utf-8 -*-
 import extractcontent
 import urllib.request
-import sys
 import codecs
 import re
+import sys
 #import unicodedata
 #from functools import reduce
+import analysis
 
 def conv_encoding(data):
     lookup = ('utf_8', 'euc_jp', 'euc_jis_2004', 'euc_jisx0213',
@@ -34,17 +35,18 @@ extractor = extractcontent.ExtractContent()
 opt = {"threshold":1, "continuous_factor": 1.00, "punctuation_weight": 20}#, "debug": True}
 extractor.set_default(opt)
 
-argvs = sys.argv                                                                
+argvs = sys.argv
 argc = len(argvs)
-UrlNum = argc - 2
+UrlNum = argc - 1
 
-if (argvs[argc - 1] in "Y" and UrlNum > 0):
-  sys.stdout.write("Please input a Keyword:")
-  keyword = input()
-elif (UrlNum <= 0):
+sys.stdout.write("Please input a Keyword:")
+keyword = input()
+
+if (UrlNum <= 0):
   print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
   quit()
 
+analysiser = analysis.AnalysisContent()
 for num in range(1, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
@@ -89,12 +91,15 @@ for num in range(1, UrlNum + 1):
     except:                                                              
       break
   for line in lines:
-    if (argvs[argc - 1] in "N"):
+    if keyword in line:
+      print("\n本文:")
       print("%s\n" % line)
-    else:
-      if keyword in line:
-        print("%s\n" % line)
-  
+      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes = analysiser.ReceivedObj(line, keyword)
+      #print("leadID:%s" % leadID)
+      #print("keywordID:%s" % keywordID)
+      #print("%s" % chunkdic)
+      analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes)
+
   #html, title = extractor.as_html()
   #print("html:%s\ntitle:%s" % (html, title))
   #print("%s" % (type(title)))
