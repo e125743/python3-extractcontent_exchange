@@ -39,12 +39,12 @@ argvs = sys.argv
 argc = len(argvs)
 UrlNum = argc - 1
 
-sys.stdout.write("Please input a Keyword:")
-keyword = input()
-
 if (UrlNum <= 0):
   print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
   quit()
+
+sys.stdout.write("Please input a Keyword:")
+keyword = input()
 
 analysiser = analysis.AnalysisContent()
 for num in range(1, UrlNum + 1):
@@ -94,11 +94,11 @@ for num in range(1, UrlNum + 1):
     if keyword in line:
       print("\n本文:")
       print("%s\n" % line)
-      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes = analysiser.ReceivedObj(line, keyword)
+      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword)
       #print("leadID:%s" % leadID)
       #print("keywordID:%s" % keywordID)
       #print("%s" % chunkdic)
-      analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes)
+      analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
 
   #html, title = extractor.as_html()
   #print("html:%s\ntitle:%s" % (html, title))

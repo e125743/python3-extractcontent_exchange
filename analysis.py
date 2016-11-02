@@ -17,7 +17,7 @@ class AnalysisContent(object):
         leadID = []
         chunkdic = {}
         AlreadyID = []
-        #TokenGroupes = {}
+        TokenGroupes = {}
         RelateGroupes = []
         for chunk in sent.findall('.//chunk'):
           #print("%s" % sent.findall(".//chunk[@id='0']"))
@@ -29,7 +29,6 @@ class AnalysisContent(object):
             RelateID = []
             while True:
               linkchunk = sent.find(".//chunk[@id='{linkid}']".format(**locals()))
-
               if linkid == '-1':
                 RelateGroupes.append(RelateID)
                 #print("listed!")
@@ -48,13 +47,14 @@ class AnalysisContent(object):
                   for tok in linkchunk:
                     chunkText += tok.text
                     chunkdic.setdefault(int(linkchunk.attrib['id']), {})[int('{tok.attrib[id]}'.format(**locals()))] = [tok.attrib['feature'], tok.text]
-                    #TokenGroupes.setdefault(int(linkchunk.attrib['id']), []).append(int('{tok.attrib[id]}'.format(**locals())))
+                    TokenGroupes.setdefault(int(linkchunk.attrib['id']), []).append(int('{tok.attrib[id]}'.format(**locals())))
+                    #print("text:%s" % tok.text)
+                    #print("id:%s" % tok.attrib['id'])
 
                     if chunkText.endswith(keyword.replace(" ","")) is True:
                       keychunkID.append(int(linkchunk.attrib['id']))
                       keytokenID.append(int(tok.attrib['id']))
 
-                  #TokenGroupes.setdefault(int(linkchunk.attrib['id']), []).append(int(tok.attrib['link']))
                   chunkdic.setdefault(int(linkchunk.attrib['id']), {})[int(sys.maxsize)] = int(linkchunk.attrib['link'])
 
                   #for id,text in sorted(chunkdic[int(linkchunk.attrib['id'])].items()):
@@ -73,7 +73,7 @@ class AnalysisContent(object):
         #print("leadID:%s" % leadID)
         #print("%s" % chunkdic)
         #print("TokenGroupes:%s" % TokenGroupes)
-        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes)
+        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
 
 
 
@@ -92,7 +92,7 @@ class AnalysisContent(object):
             print("%s" % text[1])
 
 
-            if "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:
+            if "動詞" in text[0] and "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:
               endflag = 1
               print("自立a%s" % endflag)
             elif ("助動詞" or "助詞" or "動詞" in text[0]) and endflag == 1 and basicflag == 0:
@@ -121,7 +121,7 @@ class AnalysisContent(object):
 
 
 
-    def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes):
+    def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):
         #print("leadID:%s" % leadID)
 
         """
@@ -133,7 +133,7 @@ class AnalysisContent(object):
 
         print("chunkdic:%s" % chunkdic)
         print("RelateGroupes:%s" % RelateGroupes)
-        #print("TokenGroupes:%s" % TokenGroupes)
+        print("TokenGroupes:%s" % TokenGroupes)
         print("keychunkID:%s" % keychunkID)
         print("keytokenID:%s" % keytokenID)
 
@@ -141,6 +141,8 @@ class AnalysisContent(object):
         for id in keychunkID:
           print("keychunkID:%s" % id)
           keychunk = chunkdic[id]
+          keytokenEnd = TokenGroupes[id][-1]
+          keytokenFirst = TokenGroupes[id][0]
 
           try:
             keyrear = keychunk[int(keytokenID[i]) + 1]
@@ -153,10 +155,10 @@ class AnalysisContent(object):
               keychunk = chunkdic[int(id) + 1]
               keyrear = keychunk[int(keytokenID[i]) + 1]
 
-          i += 1
           print("keyrear:%s" % keyrear)
 
           if len(keyrear) != 0:
+            endtokenid = 0
             if keyrear[1] == 'の':
               print("Yes:%s" % keyrear[1])
 
@@ -168,7 +170,8 @@ class AnalysisContent(object):
                   #rearGroupe = list(filter((lambda x: x > id), Groupe))
                   #rearGroupe_set = set(rearGroupe)
                   #print("rearGroupe:%s" % rearGroupe)
-                  endtokenid = 0
+                  #endtokenid = 0
+
                   for groupeid in range(1, len(Groupe)):
                     if Groupe[groupeid] - Groupe[groupeid - 1] > 1 and Groupe[groupeid] > id and endtokenid == 0:
                       print("%s" % int(Groupe[groupeid] - Groupe[groupeid - 1]))
@@ -215,7 +218,7 @@ class AnalysisContent(object):
             else:
               print("not:%s" % keyrear[1])
 
-              endtokenid = 0
+              #endtokenid = 0
               for Groupe in RelateGroupes:
                 if id in Groupe:
                   print("endchunk:%s" % chunkdic[Groupe[-1]])
@@ -241,6 +244,49 @@ class AnalysisContent(object):
                         print("sentenceEnd:%s" % sentenceEnd)
                         break
 
+            if endtokenid != 0:
+              upToken = {}
+              print("%s" % chunkdic)
+              print("keytokenEnd:%s" % keytokenEnd)
+              print("keytokenFirst:%s" % keytokenFirst)
+              for chunk in chunkdic.values():
+                #print("%s" % chunk)
+                for tokenid in chunk.keys():
+                  print("token:%s" % chunk[tokenid])
+
+                  if isinstance(chunk[tokenid], list) is True:
+
+                    if tokenid == endtokenid:
+                      if chunk[tokenid][1].endswith("だ") is True:
+                        chunk[tokenid][1] = "である"
+
+                    if keytokenEnd < tokenid <= int(endtokenid):
+                      setid = tokenid + keytokenFirst - keytokenEnd - 1
+                    elif keytokenFirst <= tokenid <= keytokenID[i]:
+                      setid = endtokenid + tokenid - keytokenEnd
+                    elif tokenid < keytokenFirst:
+                      setid = tokenid
+                    else:
+                      continue
+                    """
+                    elif keytokenID[i] < tokenid <= keytokenEnd or endtokenid < tokenid:
+                      break
+                    else:
+                      setid = tokenid + keychunkID[i] - keytokenEnd
+                    """
+                    
+
+                    upToken[setid] = chunk[tokenid][1]
+
+              print("upToken:%s" % upToken)
+              #print("upToken:%s" % sorted(upToken.items()))
+
+              upSentence = ''
+              for key in sorted(upToken.keys()):
+                upSentence += upToken[key]
+              print("upSentence:%s" % upSentence)
+            
+          i += 1
         """
         for id in keychunkID:
           print("keywordChunk:%s" % chunkdic[id])
