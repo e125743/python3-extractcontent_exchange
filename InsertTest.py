@@ -35,7 +35,7 @@ if __name__ == "__main__":
     argc = len(argvs)
 
     if (argc < 2):
-        print('Usage: # python %s UserName:Input the UserName which you want to search.' % argvs[0])
+        print('Usage: # python %s UserName1 ... UserNamen:Input UserNames which you want to search.' % argvs[0])
         quit()
 
     for i in range(1,argc):
