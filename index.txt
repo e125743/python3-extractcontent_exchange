@@ -93,12 +93,57 @@
 <script src="/js/scAccount.js"></script>
 <script src="/js/dlvRequest.js"></script>
 <script src="/js/scRequest.js"></script>
+<!-- globalJavaScript -->
+<script>document.write('<scr'+'ipt type="text/javascript" src="http'+(location.protocol==='https:'?'s://s':'://')+'cdn.cxense.com/cx.js"></scr'+'ipt>');</script>
+<script>
+var cx_segments = '';
+cx_segments = cX.getUserSegmentIds({persistedQueryId:'32780b6d6fb51c7b1fefeb67a7e3305b165e5c6a'});
+</script>
+
 <script type="text/javascript" src="/js/base.js"></script>
 <script type="text/javascript" src="/js/ad.js"></script>
 <script type="text/javascript" src="/js/article.js"></script>
 <script type="text/javascript" src="/js/mobile/base.js"></script>
 <script type="text/javascript" src="/js/mobile/ad.js"></script>
 <script type="text/javascript" src="/js/mobile/article.js"></script>
+
+<script>
+(function(){
+var d = document,h = location.hash,u = 'http://cx.api.itmedia.co.jp/v1.js';
+if(h.match(/^#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/)) u += '?ip=' + h.replace('#','');
+d.write('<script src="' + u + '"><\/script>');
+})();
+</script>
+<script src="/js/lib/cx_v2.js"></script>
+<script>
+// Cxense script begin
+var cX = cX || {}; cX.callQueue = cX.callQueue || [];
+cx_push_iitt(); // iitt Cookie を push
+cX.callQueue.push(['setSiteId','1139589339878236194']);
+
+
+
+
+
+
+
+
+var cx_k_param = cx_api_itm('ary');
+
+cx_push_cxapi('7afa26d5cf882cbdf1133ef0a74bc60ab5581d17'); // cx.api 連携後に sendPageViewEvent push
+(function(){try{var scriptEl = document.createElement('script');scriptEl.type = 'text/javascript';scriptEl.async = 'async';
+scriptEl.src = ('https:' == location.protocol) ? 'https://scdn.cxense.com/cx.js' : 'http://cdn.cxense.com/cx.js';
+var targetEl = document.getElementsByTagName('script')[0];targetEl.parentNode.insertBefore(scriptEl,targetEl);}catch(e){};}());
+// Cxense script end
+
+// cx_click_map('1141827478709654509'); // cx fix dlv area tag
+window.addEventListener('DOMContentLoaded',function(){
+	cx_add_meta(); // CMS META を cx META として add
+	cx_add_comment(); // cx クロール範囲指定コメントタグ add
+	cx_push_readable('7afa26d5cf882cbdf1133ef0a74bc60ab5581d17'); // beforeunload 時に本文読了率を push（ex persistedQueryId）
+},false);
+</script>
+<!-- /globalJavaScript -->
 
 </head><body id="masterType-article">
 <script type="text/javascript">
@@ -212,6 +257,7 @@ atag2oid('globalNavigationGroup0');
 	<div id="globalHeaderNavigation">
 	<div class="globalSocialLinks">
 <ul>
+<li class="globalSocialLinks-mailmagazine"><a href="http://www.itmedia.co.jp/lifestyle/subtop/info/lp/mailmag-dlifestyle.html">ITmedia デジタルライフスタイル通信</a></li>
 <li class="globalSocialLinks-Facebook">	<a href="http://www.facebook.com/ITmediaMobile" target="_blank">ITmedia Mobile Facebook</a></li>
 <li class="globalSocialLinks-Twitter">	<a href="http://twitter.com/#!/itm_mobile" target="_blank">@itm_mobile</a></li>
 <li class="globalSocialLinks-RSS"><a href="http://rss.itmedia.co.jp/rss/1.0/mobile.xml" target="_blank">ITmedia Mobile 最新記事一覧</a></li>
@@ -546,6 +592,23 @@ iPhone 6／iPhone 6 Plusはシルバーとスペースグレイ、16Gバイト�
 <p><span style="font-size:65%;font-family:Arial,Helvetica,sans-serif;line-height:135%;color:#555555;">
 Copyright&copy; 2016 ITmedia, Inc. All Rights Reserved.</span></p>
 </div>
+<script>
+(function () {
+	if(masterType() != 'article') return false;
+	if(!document.getElementById('endlinkConnection')) return false;
+	if(!document.getElementById('endlink-art1')) return false;
+
+	// 関連記事内アブストラクトをカット
+	var target = jQuery('#endlinkConnection').find('li.endlink-art');
+	console.log(target);
+	target.contents().filter(function(){
+		return this.nodeType==3
+		&& jQuery.inArray(jQuery(this).parent(),target);
+	console.log('logcheck');
+	}).remove();
+})();
+</script>
+
 
 <div id="ITF"><script>adRequest({'position':'ITF'});</script></div>
 
@@ -589,10 +652,73 @@ Copyright&copy; 2016 ITmedia, Inc. All Rights Reserved.</span></p>
 <script type="text/javascript">
 jQuery('#masterSocialbuttonBtm').before(jQuery('#cmsBody .endkwd'));
 jQuery('#masterSocialbuttonBtm').before(jQuery('#endlinkConnection'));
+jQuery('#ITF').after(jQuery('#start').addClass('ctrlbottom'));
+jQuery('#ITF').after(jQuery('#cmsBody .ctrl').eq(1).addClass('ctrlbottom'));
+jQuery('#ITF').after(jQuery('#notice'));
 </script>
+
 
 </div></div> 
 <!--EDIT START-->
+
+<script>
+(function(){
+	var d = document,
+			endlink,         /* 関連記事枠 */
+			endlink_ul,      /* 関連記事＆関連リンク */
+			endlink_art,     /* 関連記事ul */
+			endlink_artlist, /* 関連記事li */
+			copyright,       /* コピーライト */
+			div = d.createElement('div'),
+			atag = d.createElement('a'),
+			msg_pre, /* preview でのメッセージ用 */
+			refURL = getUrl().path_cutpageing_cutparam.replace('.html','_00.html');
+	atag.href = refURL;
+	atag.innerHTML = 'この記事の関連情報';
+	div.appendChild(atag);
+	div.id = 'cmsReferenceBtn';
+	if (d.getElementById('endlinkConnection')) {
+		/* 関連記事枠がある場合 */
+		endlink = d.getElementById('endlinkConnection');
+		endlink_ul = endlink.getElementsByTagName('ul');
+		for (var i=0; i<endlink_ul.length; i++) {
+			if (endlink_ul[i].id == 'art') {
+				endlink_art = endlink_ul[i];
+				endlink_artlist = endlink_art.getElementsByTagName('li');
+			}
+		}
+		/* 関連記事6件目以降を非表示 */
+		if(endlink_artlist && endlink_artlist.length > 5) {
+			// preview では隠さず、非表示になる旨を表示
+			if(getUrl().domain.match(/preview/)) {
+				msg_pre = d.createElement('div');
+				msg_pre.innerHTML = '※↓6件目以降は公開時に非表示になります↓※';
+				msg_pre.style.clear = 'both';
+				msg_pre.style.margin = '10px 0px';
+				msg_pre.style.fontSize = '16px';
+				msg_pre.style.color = '#f75555';
+				endlink_art.insertBefore(msg_pre,endlink_artlist[5]);
+			} else {
+				for (var j=5; j<endlink_artlist.length; j++) {
+					endlink_artlist[j].style.display = 'none';
+				}
+			}
+		}
+		/* 関連記事がある場合はその下に、無ければ関連記事枠の上に表示 */
+		if (endlink_art !== undefined) {
+			div.style.margin = '-30px 0 0';
+			endlink_art.parentNode.insertBefore(div,endlink_art.nextSibling);
+		} else {
+			endlink.insertBefore(div,endlink.firstChild);
+		}
+	} else if (d.getElementById('end') || d.getElementsByClassName('ctrl').length == 0) {
+		/* 最終ページもしくは単体ページで、関連記事枠が無い場合 */
+		copyright = d.getElementById('cmsCopyright');
+		copyright.parentNode.insertBefore(div,copyright);
+	}
+})();
+</script>
+
 <!--EDIT END-->
 
 <div id="cmsPrcredit"><div class="inner"></div></div>
@@ -677,6 +803,19 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <!-- /htmlgen -->
 <!--動画枠-->
 		<div id="ISAL"><script>adRequest({'position':'20ISAL'});</script></div>
+		<!-- htmlgen -->
+<div class="colBox colBoxMailmagazineBanner">
+<div class="colBoxOuter">
+<div class="colBoxInner">
+<div class="colBoxIndex">
+<div class="colBoxBanner"><a href="http://www.itmedia.co.jp/pcuser/articles/1611/21/news014.html" title=""><img src="http://image.itmedia.co.jp/lifestyle/images/htmlgen/gadget_mailmagazine_banner_1_1479709685.gif" title=""></a></div>
+</div>
+<div class="colBoxClear"></div>
+</div>
+</div>
+</div>
+<!-- /htmlgen -->
+<!-- メルマガ告知 -->
 		<div id="ITOP"><script>adRequest({'position':'20ITOP'});</script></div>
 		<div class="colBox colBoxRanking">
 <div class="colBoxOuter">
@@ -684,30 +823,30 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <div class="colBoxInner">
 <div class="colBoxIndex">
 <div class="colBoxSubhead">
-2016年11月03日 更新
+2016年12月07日 更新
 </div>
 <div class="colBoxOlist">
 <ol>
 <li class="rank1">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/01/news091.html" title="カメラや電源周りが進化――写真で解説する「Xperia XZ SO-01J」「Xperia X Compact SO-02J」" onclick="designCnt('アクセストップ10','rank1');">カメラや電源周りが進化――写真で解説する「Xperia XZ SO-01J」「Xperia X Compact SO-02J」</a><span>（2016年11月01日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/07/news030.html" title="ポケモンGOの「第2世代アップデート」までに必ずやっておきたいこと" onclick="designCnt('アクセストップ10','rank1');">ポケモンGOの「第2世代アップデート」までに必ずやっておきたいこと</a><span>（2016年12月07日）</span>
 </li><li class="rank2">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news005.html" title="お父さんの天敵であるYouTubeの“あの動画”" onclick="designCnt('アクセストップ10','rank2');">お父さんの天敵であるYouTubeの“あの動画”</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/05/news028.html" title="みんなの「メタモン」ゲット率は？　ポケモンGOアンケート調査" onclick="designCnt('アクセストップ10','rank2');">みんなの「メタモン」ゲット率は？　ポケモンGOアンケート調査</a><span>（2016年12月05日）</span>
 </li><li class="rank3">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/01/news162.html" title="日本版「Apple Pay」スタート　モバイルルーターは「風前のともしび」？" onclick="designCnt('アクセストップ10','rank3');">日本版「Apple Pay」スタート　モバイルルーターは「風前のともしび」？</a><span>（2016年11月01日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/05/news110.html" title="ドコモの「MONO」、12月9日発売 端末購入サポートで一括648円に" onclick="designCnt('アクセストップ10','rank3');">ドコモの「MONO」、12月9日発売 端末購入サポートで一括648円に</a><span>（2016年12月05日）</span>
 </li><li class="rank4">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/01/news050.html" title="「安い」「速い」「真の大容量」――モバイルWi-Fiルーターの生き残る道" onclick="designCnt('アクセストップ10','rank4');">「安い」「速い」「真の大容量」――モバイルWi-Fiルーターの生き残る道</a><span>（2016年11月01日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/07/news015.html" title="バッテリーに注意！　iPhoneが膨らむ原因と対処法" onclick="designCnt('アクセストップ10','rank4');">バッテリーに注意！　iPhoneが膨らむ原因と対処法</a><span>（2016年12月07日）</span>
 </li><li class="rank5">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news079.html" title="LenovoのTango端末「Phab 2 Pro」、米国で販売開始　対応アプリは35本以上" onclick="designCnt('アクセストップ10','rank5');">LenovoのTango端末「Phab 2 Pro」、米国で販売開始　対応アプリは35本以上</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news090.html" title="Google、選んだ相手に居場所を知らせるアプリ「Trusted Contacts」公開" onclick="designCnt('アクセストップ10','rank5');">Google、選んだ相手に居場所を知らせるアプリ「Trusted Contacts」公開</a><span>（2016年12月06日）</span>
 </li><li class="rank6">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news105.html" title="ドコモ、iモードケータイの出荷を2016年内に終了へ　以後は“在庫限り”" onclick="designCnt('アクセストップ10','rank6');">ドコモ、iモードケータイの出荷を2016年内に終了へ　以後は“在庫限り”</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1609/11/news003.html" title="ポケモンGOが「あえて隠してきた」もの" onclick="designCnt('アクセストップ10','rank6');">ポケモンGOが「あえて隠してきた」もの</a><span>（2016年09月11日）</span>
 </li><li class="rank7">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/01/news141.html" title="ドコモ、VoLTEケータイ「P-smart ケータイ P-01J」を11月4日発売　新規・MNPだと実質0円に" onclick="designCnt('アクセストップ10','rank7');">ドコモ、VoLTEケータイ「P-smart ケータイ P-01J」を11月4日発売　新規・MNPだと実質0円に</a><span>（2016年11月01日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news051.html" title="DTI で業界最安値「DTI SIM」　10GB 2,100円プランの提供開始" onclick="designCnt('アクセストップ10','rank7');">DTI で業界最安値「DTI SIM」　10GB 2,100円プランの提供開始</a><span>（2016年12月06日）</span>
 </li><li class="rank8">
-<a href="http://www.itmedia.co.jp/mobile/articles/1511/24/news105.html" title="ドコモ、パナソニックのiモードケータイ「P-01H」を11月27日に発売" onclick="designCnt('アクセストップ10','rank8');">ドコモ、パナソニックのiモードケータイ「P-01H」を11月27日に発売</a><span>（2015年11月24日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news087.html" title="Xperia XZのカメラの真価に迫る／格安SIMのユーザー獲得競争" onclick="designCnt('アクセストップ10','rank8');">Xperia XZのカメラの真価に迫る／格安SIMのユーザー獲得競争</a><span>（2016年12月06日）</span>
 </li><li class="rank9">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news011.html" title="ZTE、シアターサウンドスマホ「AXON 7」「AXON 7 mini」を発表" onclick="designCnt('アクセストップ10','rank9');">ZTE、シアターサウンドスマホ「AXON 7」「AXON 7 mini」を発表</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news019.html" title="意外と知らない？　iPhoneで「関数電卓」を使う小技" onclick="designCnt('アクセストップ10','rank9');">意外と知らない？　iPhoneで「関数電卓」を使う小技</a><span>（2016年12月06日）</span>
 </li><li class="rank10">
-<a href="http://www.itmedia.co.jp/mobile/articles/1610/31/news119.html" title="本家超えの「UQ mobile」・苦戦続く「mineo」――「格安SIM」の実効速度を比較（au回線＋Y!mobile 9月編）" onclick="designCnt('アクセストップ10','rank10');">本家超えの「UQ mobile」・苦戦続く「mineo」――「格安SIM」の実効速度を比較（au回線＋Y!mobile 9月編）</a><span>（2016年10月31日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/07/news025.html" title="みんなが期待するのは「伝説ポケモン」より「金銀ポケモン」？" onclick="designCnt('アクセストップ10','rank10');">みんなが期待するのは「伝説ポケモン」より「金銀ポケモン」？</a><span>（2016年12月07日）</span>
 </li>
 </ol>
 </div>
@@ -724,20 +863,20 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <div class="colBoxInner">
 <div class="colBoxIndex">
 <div class="colBoxSubhead">
-2016年11月03日 更新
+2016年12月07日 更新
 </div>
 <div class="colBoxOlist">
 <ol>
 <li class="rank1">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news105.html" title="ドコモ、iモードケータイの出荷を2016年内に終了へ　以後は“在庫限り”">ドコモ、iモードケータイの出荷を2016年内に終了へ　以後は“在庫限り”</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/07/news030.html" title="ポケモンGOの「第2世代アップデート」までに必ずやっておきたいこと">ポケモンGOの「第2世代アップデート」までに必ずやっておきたいこと</a><span>（2016年12月07日）</span>
 </li><li class="rank2">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/01/news050.html" title="「安い」「速い」「真の大容量」――モバイルWi-Fiルーターの生き残る道">「安い」「速い」「真の大容量」――モバイルWi-Fiルーターの生き残る道</a><span>（2016年11月01日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news090.html" title="Google、選んだ相手に居場所を知らせるアプリ「Trusted Contacts」公開">Google、選んだ相手に居場所を知らせるアプリ「Trusted Contacts」公開</a><span>（2016年12月06日）</span>
 </li><li class="rank3">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news079.html" title="LenovoのTango端末「Phab 2 Pro」、米国で販売開始　対応アプリは35本以上">LenovoのTango端末「Phab 2 Pro」、米国で販売開始　対応アプリは35本以上</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/04/news015.html" title="FREETELの「ARIA 2」、UQの「WiMAX 2+」契約では使えず【追記あり】">FREETELの「ARIA 2」、UQの「WiMAX 2+」契約では使えず【追記あり】</a><span>（2016年12月04日）</span>
 </li><li class="rank4">
-<a href="http://www.itmedia.co.jp/mobile/articles/1611/02/news140.html" title="UNiCASE、手塚治虫マンガとコラボしたネクタイ柄iPhone 7ケースを発売">UNiCASE、手塚治虫マンガとコラボしたネクタイ柄iPhone 7ケースを発売</a><span>（2016年11月02日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/07/news015.html" title="バッテリーに注意！　iPhoneが膨らむ原因と対処法">バッテリーに注意！　iPhoneが膨らむ原因と対処法</a><span>（2016年12月07日）</span>
 </li><li class="rank5">
-<a href="http://www.itmedia.co.jp/mobile/articles/1610/31/news057.html" title="「悪ではないが、検討すべき課題がある」――IIJのゼロ・レーティングに対する考え">「悪ではないが、検討すべき課題がある」――IIJのゼロ・レーティングに対する考え</a><span>（2016年10月31日）</span>
+<a href="http://www.itmedia.co.jp/mobile/articles/1612/06/news109.html" title="最大30％オフの「Anker冬の3大祭り」がAmazonで開催　12月10日〜12日">最大30％オフの「Anker冬の3大祭り」がAmazonで開催　12月10日〜12日</a><span>（2016年12月06日）</span>
 </li>
 </ol>
 </div>
@@ -786,6 +925,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <div class="colBoxIndex colBoxCarendar2016 colBoxCount1">
 <div class="colBoxSubhead"><h4>2016年</h4></div>
 <div class="colBoxUlist"><ul>
+<li><a href="http://www.itmedia.co.jp/mobile/subtop/archive/1612.html">12月</a></li>
 <li><a href="http://www.itmedia.co.jp/mobile/subtop/archive/1611.html">11月</a></li>
 <li><a href="http://www.itmedia.co.jp/mobile/subtop/archive/1610.html">10月</a></li>
 <li><a href="http://www.itmedia.co.jp/mobile/subtop/archive/1609.html">9月</a></li>
@@ -1106,7 +1246,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	<div id="globalFooterMediaListIn">
 		<div class="mediaListGroup">
 			<div class="mediaList" id="mediaList01">
-				<h2>IT総合</h2>
+				<div class="mediaHead">IT総合</div>
 				<ul>
 				<li><a href="http://www.itmedia.co.jp/">ITmedia 総合TOP</a></li>
 				<li><a href="http://www.itmedia.co.jp/news/">ITmedia ニュース</a></li>
@@ -1116,7 +1256,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList01 -->
 			<div class="mediaList" id="mediaList02">
-				<h2>デジタル・ガジェット</h2>
+				<div class="mediaHead">デジタル・ガジェット</div>
 				<ul>
 				<li><a href="http://www.itmedia.co.jp/mobile/">ITmedia Mobile</a></li>
 				<li><a href="http://www.itmedia.co.jp/pcuser/">ITmedia PC USER</a></li>
@@ -1124,7 +1264,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList02 -->
 			<div class="mediaList" id="mediaList03">
-				<h2>ビジネス</h2>
+				<div class="mediaHead">ビジネス</div>
 				<ul>
 				<li><a href="http://www.itmedia.co.jp/business/">ITmedia ビジネスオンライン</a></li>
 				<li><a href="http://mag.executive.itmedia.co.jp/">ITmedia エグゼクティブ</a></li>
@@ -1135,7 +1275,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList03 -->
 			<div class="mediaList" id="mediaList04">
-				<h2>カルチャー</h2>
+				<div class="mediaHead">カルチャー</div>
 				<ul>
 				<li><a href="http://nlab.itmedia.co.jp/">ねとらぼ</a></li>
 				<li><a href="http://nlab.itmedia.co.jp/nl/subtop/entertainment/">ねとらぼエンタ</a></li>
@@ -1144,7 +1284,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList04 -->
 			<div class="mediaList" id="mediaList10">
-				<h2>ライフ</h2>
+				<div class="mediaHead">ライフ</div>
 				<ul>
 				<li><a href="http://healthcare.itmedia.co.jp/">ヘルスケア</a></li>
 				</ul>
@@ -1152,7 +1292,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		</div><!-- /.mediaListGroup -->
 		<div class="mediaListGroup">
 			<div class="mediaList" id="mediaList06">
-				<h2>企業IT</h2>
+				<div class="mediaHead">企業IT</div>
 				<ul>
 				<li><a href="http://www.itmedia.co.jp/enterprise/">ITmedia エンタープライズ</a></li>
 				<li><a href="http://www.itmedia.co.jp/enterprise/subtop/dictionary/">情報システム用語事典</a></li>
@@ -1165,7 +1305,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList06 -->
 			<div class="mediaList" id="mediaList07">
-				<h2>テクノロジー</h2>
+				<div class="mediaHead">テクノロジー</div>
 				<ul>
 				<li><a href="http://www.atmarkit.co.jp/">＠IT</a></li>
 				<li><a href="http://qa.atmarkit.co.jp/">QA＠IT</a></li>
@@ -1173,7 +1313,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList07 -->
 			<div class="mediaList" id="mediaList08">
-				<h2>エンジニアリング</h2>
+				<div class="mediaHead">エンジニアリング</div>
 				<ul>
 				<li><a href="http://techfactory.itmedia.co.jp/">TechFactory</a></li>
 				<li><a href="http://monoist.atmarkit.co.jp/">MONOist</a></li>
@@ -1184,7 +1324,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList08 -->
 			<div class="mediaList" id="mediaList09">
-				<h2>キャリア</h2>
+				<div class="mediaHead">キャリア</div>
 				<ul>
 				<li><a href="http://www.atmarkit.co.jp/ait/subtop/jibun/">＠IT自分戦略研究所</a></li>
 				<li><a href="http://el.jibun.atmarkit.co.jp/">エンジニアライフ</a></li>
@@ -1192,7 +1332,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</div><!-- /#mediaList09 -->
 			<div class="mediaList" id="mediaList05">
-				<h2>アプリ</h2>
+				<div class="mediaHead">アプリ</div>
 				<ul>
 				<li><a href="http://www.itmedia.co.jp/info/itmapp/itmedia.html">ITmedia</a></li>
 				<li><a href="http://www.itmedia.co.jp/info/itmapp/nlab.html">ねとらぼ</a></li>
@@ -1287,7 +1427,7 @@ s.prop58= (typeof dcl_start === 'undefined')? "": resTime();
 
 /* PCUSER , MOBILE , HC , LIFESTYLE ARTICLE ONLY */
 /*=========================*/
-var key1 = ['コンテンツチーム']; // 23
+var key1 = ['コンテンツチーム','マウスコンピューター']; // 23
 var key2 = ['SIMカード','中古スマホ']; // 56
 var metatags = document.getElementsByTagName('head')[0].getElementsByTagName('meta');
 var meta_key = '';
@@ -1330,7 +1470,13 @@ if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+
 //--></script><!--/DO NOT REMOVE/-->
 <!-- End SiteCatalyst code version: H.2. -->
 
-			<script>adRequest({'position':'N'});</script>
+			<!-- itmdp start -->
+			<script src="/js/itmdp_code.js"></script>
+			<script>
+			itmdp.sc2itmdp();
+			var itm_pageview = itmdp.pageview();
+			</script>
+			<!-- itmdp end -->
 		</div></div>
     
 

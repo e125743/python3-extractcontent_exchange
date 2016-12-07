@@ -5,9 +5,33 @@ import urllib.request
 import codecs
 import re
 import sys
+import math
+import time
+#from cython.parallel cimport parallel
+#cimport openmp
+from multiprocessing import Process, Pipe
 #import unicodedata
 #from functools import reduce
 import analysis
+
+def lines_task(lines, keyword):
+  print(len(lines))
+  for line in lines:
+    if keyword in line:
+      print("\n本文:")
+      print("%s\n" % line)
+'''
+      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes, tree, print_format = analysiser.ReceivedObj(line, keyword)
+      print(tree)
+      print(print_format)
+      #print("leadID:%s" % leadID)
+      #print("keywordID:%s" % keywordID)
+      #print("%s" % chunkdic)
+      upSentencedic = analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+      if len(upSentencedic) > 0:
+        for upSentence in upSentencedic:
+          print(upSentence)
+'''
 
 def conv_encoding(data):
     lookup = ('utf_8', 'euc_jp', 'euc_jis_2004', 'euc_jisx0213',
@@ -40,14 +64,17 @@ argc = len(argvs)
 UrlNum = argc - 1
 
 if (UrlNum <= 0):
-  print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
+  print('Usage: # python %s pthread_number URL1 URL2 ... URLn' % argvs[0])
   quit()
 
 sys.stdout.write("Please input a Keyword:")
 keyword = input()
 
+start = time.time()
+lines_thread_num = int(sys.argv[1])
 analysiser = analysis.AnalysisContent()
-for num in range(1, UrlNum + 1):
+lines = []
+for num in range(2, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
   
@@ -82,33 +109,62 @@ for num in range(1, UrlNum + 1):
   print("title:%s\n\ntext:" % (title))
   
   text = text.splitlines()
-  lines = []
   for line in text:
     lines.extend(line.split("。"))
   while (True):
     try:
       lines.remove("")
-    except:                                                              
+    except:
       break
-  for line in lines:
-    if keyword in line:
-      print("\n本文:")
-      print("%s\n" % line)
-      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword)
-      #print("leadID:%s" % leadID)
-      #print("keywordID:%s" % keywordID)
-      #print("%s" % chunkdic)
-      analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
 
-  #html, title = extractor.as_html()
-  #print("html:%s\ntitle:%s" % (html, title))
-  #print("%s" % (type(title)))
+for num in range(0, len(lines)):
+  print(lines[num])
+  print(num)
+
+thread_num = int(sys.argv[1])
+lines_length = len(lines)
+processes = []
+task_lines = []
+start = 0
+task_block = math.floor(lines_length / thread_num)
+task_rest = lines_length % thread_num
+
+print(task_rest)
+print(task_block)
+for i in range(1, thread_num + 1):
+  #print(i)
+  #print("最初" + "%s" % start)
+  if i < thread_num:
+    #print("最後" + "%s" % int(task_block * i))
+    task_lines = lines[start:int(task_block * i)]
+  else:
+    #print("最後" + "%s" % int(task_block * i + task_rest))
+    task_lines = lines[start:int(task_block * i + task_rest)]
+  #print(task_lines[0])
+  #print(task_lines[len(task_lines) - 1])
+
+  processes.append(Process(group=None, target=lines_task, args=(task_lines, keyword,)))
+  start = int(task_block * i)
+
+for process in processes:
+  print("process start!\n\n")
+  process.start()
+
+for process in processes:
+  print("process end!\n\n")
+  process.join()
+
+#html, title = extractor.as_html()
+#print("html:%s\ntitle:%s" % (html, title))
+#print("%s" % (type(title)))
   
-  #f.write(html)
-  #f.write(title)
+#f.write(html)
+#f.write(title)
   
-  title = extractor.extract_title(file)
-  print("title:%s" % title)
+title = extractor.extract_title(file)
+print("title:%s" % title)
   
-  #f.write(title)
-  #f.close()
+#f.write(title)
+#f.close()
+elapsed_time = time.time() - start
+print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")

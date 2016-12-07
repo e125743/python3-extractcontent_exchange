@@ -8,8 +8,8 @@ class AnalysisContent(object):
     def ReceivedObj(self, sentence, keyword):
         c = CaboCha.Parser()
         tree =  c.parse(sentence)
-        print("%s" % tree.toString(CaboCha.FORMAT_TREE)) #簡易 Tree 表示での出力
-        print("%s" % tree.toString(CaboCha.FORMAT_LATTICE)) #計算機に処理しやすいフォーマットで出力
+        #print("%s" % tree.toString(CaboCha.FORMAT_TREE)) #簡易 Tree 表示での出力
+        #print("%s" % tree.toString(CaboCha.FORMAT_LATTICE)) #計算機に処理しやすいフォーマットで出力
         sent = ET.fromstring(tree.toString(CaboCha.FORMAT_XML))
 
         keychunkID = []
@@ -73,7 +73,7 @@ class AnalysisContent(object):
         #print("leadID:%s" % leadID)
         #print("%s" % chunkdic)
         #print("TokenGroupes:%s" % TokenGroupes)
-        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes, tree.toString(CaboCha.FORMAT_TREE), tree.toString(CaboCha.FORMAT_LATTICE))
 
 
 
@@ -89,32 +89,32 @@ class AnalysisContent(object):
             sentenceEnd = id
             #print("%s" % type(text))
             #print("%s" % alltext)
-            print("%s" % text[1])
+            #print("%s" % text[1])
 
 
             if "動詞" in text[0] and "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:
               endflag = 1
-              print("自立a%s" % endflag)
+              #print("自立a%s" % endflag)
             elif ("助動詞" or "助詞" or "動詞" in text[0]) and endflag == 1 and basicflag == 0:
               endflag = 1
-              print("自立b%s" % endflag)
+              #print("自立b%s" % endflag)
             else:
               endflag = 0
-              print("自立%s" % endflag)
+              #print("自立%s" % endflag)
 
             if "基本形" in text[0]:
               basicflag = 1
-              print("基本形")
+              #print("基本形")
 
             if endflag == 1:
-              print("endtoken:%s" % alltext)
-              print("%s" % endflag)
+              #print("endtoken:%s" % alltext)
+              #print("%s" % endflag)
               endtokenid = id
             elif alltext.endswith("だ") is True:
-              print("endtoken:%s" % alltext)
+              #print("endtoken:%s" % alltext)
               endtokenid = id
             elif alltext.endswith("である") is True:
-              print("endtoken:%s" % alltext)
+              #print("endtoken:%s" % alltext)
               endtokenid = id
         
         return (endtokenid, sentenceEnd)
@@ -122,6 +122,7 @@ class AnalysisContent(object):
 
 
     def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):
+        upSentencedic = []
         #print("leadID:%s" % leadID)
 
         """
@@ -131,15 +132,15 @@ class AnalysisContent(object):
             print("%s " % tokenid, "%s" % token)
         """
 
-        print("chunkdic:%s" % chunkdic)
-        print("RelateGroupes:%s" % RelateGroupes)
-        print("TokenGroupes:%s" % TokenGroupes)
-        print("keychunkID:%s" % keychunkID)
-        print("keytokenID:%s" % keytokenID)
+        #print("chunkdic:%s" % chunkdic)
+        #print("RelateGroupes:%s" % RelateGroupes)
+        #print("TokenGroupes:%s" % TokenGroupes)
+        #print("keychunkID:%s" % keychunkID)
+        #print("keytokenID:%s" % keytokenID)
 
         i = 0
         for id in keychunkID:
-          print("keychunkID:%s" % id)
+          #print("keychunkID:%s" % id)
           keychunk = chunkdic[id]
           keytokenEnd = TokenGroupes[id][-1]
           keytokenFirst = TokenGroupes[id][0]
@@ -148,24 +149,24 @@ class AnalysisContent(object):
             keyrear = keychunk[int(keytokenID[i]) + 1]
           except:
             if keychunk[int(sys.maxsize)] == -1:
-              print("%s" % keychunk[int(sys.maxsize)])
+              #print("%s" % keychunk[int(sys.maxsize)])
               keyrear = []
 
             else:
               keychunk = chunkdic[int(id) + 1]
               keyrear = keychunk[int(keytokenID[i]) + 1]
 
-          print("keyrear:%s" % keyrear)
+          #print("keyrear:%s" % keyrear)
 
           if len(keyrear) != 0:
             endtokenid = 0
             if keyrear[1] == 'の':
-              print("Yes:%s" % keyrear[1])
+              #print("Yes:%s" % keyrear[1])
 
               for Groupe in RelateGroupes:
                 if id in Groupe:
-                  print("endchunk:%s" % chunkdic[Groupe[-1]])
-                  print("%s" % Groupe)
+                  #print("endchunk:%s" % chunkdic[Groupe[-1]])
+                  #print("%s" % Groupe)
 
                   #rearGroupe = list(filter((lambda x: x > id), Groupe))
                   #rearGroupe_set = set(rearGroupe)
@@ -174,7 +175,7 @@ class AnalysisContent(object):
 
                   for groupeid in range(1, len(Groupe)):
                     if Groupe[groupeid] - Groupe[groupeid - 1] > 1 and Groupe[groupeid] > id and endtokenid == 0:
-                      print("%s" % int(Groupe[groupeid] - Groupe[groupeid - 1]))
+                      #print("%s" % int(Groupe[groupeid] - Groupe[groupeid - 1]))
                       lastid = Groupe[groupeid]
                       beginid = Groupe[groupeid - 1]
 
@@ -184,14 +185,14 @@ class AnalysisContent(object):
                         #matching = list(RelateGroupe_set & rearGroupe_set)
                         rearLast.extend(list(filter((lambda x: beginid < x < lastid), RelateGroupe)))
 
-                      print("%s" % sorted(set(rearLast), reverse=True))
+                      #print("%s" % sorted(set(rearLast), reverse=True))
                       for chunkid in sorted(set(rearLast), reverse=True):
                         if endtokenid == 0:
                           endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
-                          print("%s" % endtokenid)
+                          #print("%s" % endtokenid)
                         else:
-                          print("endtokenid:%s" % endtokenid)
-                          print("sentenceEnd:%s" % sentenceEnd)
+                          #print("endtokenid:%s" % endtokenid)
+                          #print("sentenceEnd:%s" % sentenceEnd)
                           break
 
                   if endtokenid == 0:
@@ -201,8 +202,8 @@ class AnalysisContent(object):
                           if endtokenid == 0:
                             endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
                           else:
-                            print("endtokenid:%s" % endtokenid)
-                            print("sentenceEnd:%s" % sentenceEnd)
+                            #print("endtokenid:%s" % endtokenid)
+                            #print("sentenceEnd:%s" % sentenceEnd)
                             break
                     """
                     if len(matching) > 0 and Groupe != RelateGroupe:
@@ -216,20 +217,20 @@ class AnalysisContent(object):
 
 
             else:
-              print("not:%s" % keyrear[1])
+              #print("not:%s" % keyrear[1])
 
               #endtokenid = 0
               for Groupe in RelateGroupes:
                 if id in Groupe:
-                  print("endchunk:%s" % chunkdic[Groupe[-1]])
-                  print("%s" % Groupe)
+                  #print("endchunk:%s" % chunkdic[Groupe[-1]])
+                  #print("%s" % Groupe)
 
                   for chunkid in sorted(Groupe, reverse=True):
                     if endtokenid == 0:
                       endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
                     else:
-                      print("endtokenid:%s" % endtokenid)
-                      print("sentenceEnd:%s" % sentenceEnd)
+                      #print("endtokenid:%s" % endtokenid)
+                      #print("sentenceEnd:%s" % sentenceEnd)
                       break
 
               if endtokenid == 0:
@@ -240,19 +241,19 @@ class AnalysisContent(object):
                       if endtokenid == 0:
                          endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
                       else:
-                        print("endtokenid:%s" % endtokenid)
-                        print("sentenceEnd:%s" % sentenceEnd)
+                        #print("endtokenid:%s" % endtokenid)
+                        #print("sentenceEnd:%s" % sentenceEnd)
                         break
 
             if endtokenid != 0:
               upToken = {}
-              print("%s" % chunkdic)
-              print("keytokenEnd:%s" % keytokenEnd)
-              print("keytokenFirst:%s" % keytokenFirst)
+              #print("%s" % chunkdic)
+              #print("keytokenEnd:%s" % keytokenEnd)
+              #print("keytokenFirst:%s" % keytokenFirst)
               for chunk in chunkdic.values():
                 #print("%s" % chunk)
                 for tokenid in chunk.keys():
-                  print("token:%s" % chunk[tokenid])
+                  #print("token:%s" % chunk[tokenid])
 
                   if isinstance(chunk[tokenid], list) is True:
 
@@ -278,15 +279,16 @@ class AnalysisContent(object):
 
                     upToken[setid] = chunk[tokenid][1]
 
-              print("upToken:%s" % upToken)
+              #print("upToken:%s" % upToken)
               #print("upToken:%s" % sorted(upToken.items()))
 
               upSentence = ''
               for key in sorted(upToken.keys()):
                 upSentence += upToken[key]
-              print("upSentence:%s" % upSentence)
+              #print("upSentence:%s" % upSentence)
             
           i += 1
+          upSentencedic.append(upSentence)
         """
         for id in keychunkID:
           print("keywordChunk:%s" % chunkdic[id])
