@@ -5,6 +5,7 @@ import urllib.request
 import codecs
 import re
 import sys
+import time
 #import unicodedata
 #from functools import reduce
 import analysis
@@ -46,6 +47,7 @@ if (UrlNum <= 0):
 sys.stdout.write("Please input a Keyword:")
 keyword = input()
 
+start = time.time()
 analysiser = analysis.AnalysisContent()
 for num in range(1, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
@@ -112,3 +114,5 @@ for num in range(1, UrlNum + 1):
   
   #f.write(title)
   #f.close()
+elapsed_time = time.time() - start
+print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
