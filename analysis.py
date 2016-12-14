@@ -73,7 +73,7 @@ class AnalysisContent(object):
         #print("leadID:%s" % leadID)
         #print("%s" % chunkdic)
         #print("TokenGroupes:%s" % TokenGroupes)
-        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes, tree.toString(CaboCha.FORMAT_TREE), tree.toString(CaboCha.FORMAT_LATTICE))
+        return (leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)#, tree.toString(CaboCha.FORMAT_TREE), tree.toString(CaboCha.FORMAT_LATTICE))
 
 
 
@@ -286,9 +286,9 @@ class AnalysisContent(object):
               for key in sorted(upToken.keys()):
                 upSentence += upToken[key]
               #print("upSentence:%s" % upSentence)
-            
+              upSentencedic.append(upSentence)
           i += 1
-          upSentencedic.append(upSentence)
+        return upSentencedic
         """
         for id in keychunkID:
           print("keywordChunk:%s" % chunkdic[id])

@@ -9,18 +9,19 @@ import math
 import time
 #from cython.parallel cimport parallel
 #cimport openmp
-from multiprocessing import Process, Pipe
+#from multiprocessing import Process, Pipe
 #import unicodedata
 #from functools import reduce
 import analysis
+import multiTask
 
+'''
 def lines_task(lines, keyword):
   print(len(lines))
   for line in lines:
     if keyword in line:
       print("\n本文:")
       print("%s\n" % line)
-'''
       leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes, tree, print_format = analysiser.ReceivedObj(line, keyword)
       print(tree)
       print(print_format)
@@ -117,10 +118,20 @@ for num in range(2, UrlNum + 1):
     except:
       break
 
+'''
 for num in range(0, len(lines)):
-  print(lines[num])
-  print(num)
+  if keyword in lines[num]:
+    print("%s:" % num + "%s" % lines[num])
+'''
 
+upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+for num in range(0, len(lines)):
+  if keyword in lines[num]:
+    print("%s:" % num + "%s" % lines[num])
+    print(upSentencedic[num])
+
+
+'''
 thread_num = int(sys.argv[1])
 lines_length = len(lines)
 processes = []
@@ -153,6 +164,7 @@ for process in processes:
 for process in processes:
   print("process end!\n\n")
   process.join()
+'''
 
 #html, title = extractor.as_html()
 #print("html:%s\ntitle:%s" % (html, title))

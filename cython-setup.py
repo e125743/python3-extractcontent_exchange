@@ -4,8 +4,8 @@ from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
 ext_module = Extension(
-    "testMulti",
-    ["testMulti.pyx"],
+    "multiTask",
+    ["multiTask.pyx"],
     extra_compile_args=['-fopenmp'],
     extra_link_args=['-fopenmp'],
 )
