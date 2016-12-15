@@ -68,8 +68,13 @@ if (UrlNum <= 0):
   print('Usage: # python %s pthread_number URL1 URL2 ... URLn' % argvs[0])
   quit()
 
-sys.stdout.write("Please input a Keyword:")
-keyword = input()
+sys.stdout.write("Please input number of Keyword:")
+keyword_num = int(input())
+keyword = [None for i in range(keyword_num)]
+
+for i in range(keyword_num):
+  sys.stdout.write("Please input a Keyword:")
+  keyword[i] = input()
 
 start = time.time()
 lines_thread_num = int(sys.argv[1])
@@ -125,10 +130,13 @@ for num in range(0, len(lines)):
 '''
 
 upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
-for num in range(0, len(lines)):
-  if keyword in lines[num]:
-    print("%s:" % num + "%s" % lines[num])
-    print(upSentencedic[num])
+all = 0
+for i in range(keyword_num):
+  for num in range(len(lines)):
+    if keyword[i] in lines[num]:
+      print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+      print(upSentencedic[num][keyword[i]])
+      all += 1
 
 
 '''
@@ -179,4 +187,5 @@ print("title:%s" % title)
 #f.write(title)
 #f.close()
 elapsed_time = time.time() - start
-print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+print("Sample_num:%s" % all)
