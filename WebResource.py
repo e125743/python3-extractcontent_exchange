@@ -55,6 +55,7 @@ for i in range(keyword_num):
 #print(keyword)
 start = time.time()
 analysiser = analysis.AnalysisContent()
+all = 0
 for num in range(1, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
@@ -108,6 +109,7 @@ for num in range(1, UrlNum + 1):
         #print("keywordID:%s" % keywordID)
         #print("%s" % chunkdic)
         analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+        all += 1
 
   #html, title = extractor.as_html()
   #print("html:%s\ntitle:%s" % (html, title))
@@ -123,3 +125,4 @@ for num in range(1, UrlNum + 1):
   #f.close()
 elapsed_time = time.time() - start
 print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+print("Sample_num:%s" % all)
