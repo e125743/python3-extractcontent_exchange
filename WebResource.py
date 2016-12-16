@@ -99,18 +99,23 @@ for num in range(1, UrlNum + 1):
       lines.remove("")
     except:                                                              
       break
-  for num in range(keyword_num):
+  if keyword_num > 0:
+    for num in range(keyword_num):
+      for line in lines:
+        if keyword[num] in line:
+          print("\n本文:")
+          print("%s:%s\n" % (keyword[num], line))
+          leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword[num])
+          #print("leadID:%s" % leadID)
+          #print("keywordID:%s" % keywordID)
+          #print("%s" % chunkdic)
+          analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+          all += 1
+  else:
     for line in lines:
-      if keyword[num] in line:
-        print("\n本文:")
-        print("%s:%s\n" % (keyword[num], line))
-        leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword[num])
-        #print("leadID:%s" % leadID)
-        #print("keywordID:%s" % keywordID)
-        #print("%s" % chunkdic)
-        analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
-        all += 1
-
+      print("\n本文:")
+      print("%s\n" % line)
+      all += 1
   #html, title = extractor.as_html()
   #print("html:%s\ntitle:%s" % (html, title))
   #print("%s" % (type(title)))
