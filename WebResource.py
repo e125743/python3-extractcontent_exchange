@@ -129,16 +129,19 @@ for num in range(0, len(lines)):
     print("%s:" % num + "%s" % lines[num])
 '''
 
-upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
 all = 0
-for i in range(keyword_num):
+if keyword_num > 0:
+  upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+  for i in range(keyword_num):
+    for num in range(len(lines)):
+      if keyword[i] in lines[num]:
+        print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+        print(upSentencedic[num][keyword[i]])
+        all += 1
+else:
   for num in range(len(lines)):
-    if keyword[i] in lines[num]:
-      print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
-      print(upSentencedic[num][keyword[i]])
-      all += 1
-
-
+    print("\n%s:" % num + "%s\n" % lines[num])
+    all += 1
 '''
 thread_num = int(sys.argv[1])
 lines_length = len(lines)
