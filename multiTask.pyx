@@ -6,17 +6,18 @@ def multiTask(lines, keyword, num_threads):
   cdef int thread_id
   cdef int thread_max = num_threads
   cdef int lines_num = len(lines)
-  upSentencedic = []
+  upSentencedic = [{} for j in range(lines_num)]
   leadID = []
   chunkdic = []
   keychunkID = []
   keytokenID = []
   RelateGroupes = []
   TokenGroupes = []
-  keyword_num = [None for i in range(thread_max)]
-  num = [None for i in range(thread_max)]
-  for j in range(lines_num):
-    upSentencedic.append({})
+  keyword_num = []
+  num = []
+  for i in range(thread_max):
+    keyword_num.append('')
+    num.append('')
     leadID.append([])
     chunkdic.append([])
     keychunkID.append([])
@@ -33,13 +34,13 @@ def multiTask(lines, keyword, num_threads):
           if keyword[keyword_num[thread_id]] in lines[num[thread_id]]:
             #print("num%s:" % num[thread_id] + "%s" % lines[num[thread_id]])
             #print("thread:%s" % thread_id)
-            leadID[num[thread_id]], chunkdic[num[thread_id]], keychunkID[num[thread_id]], keytokenID[num[thread_id]], RelateGroupes[num[thread_id]], TokenGroupes[num[thread_id]] = analysiser.ReceivedObj(lines[num[thread_id]], keyword[keyword_num[thread_id]])
+            leadID[thread_id], chunkdic[thread_id], keychunkID[thread_id], keytokenID[thread_id], RelateGroupes[thread_id], TokenGroupes[thread_id] = analysiser.ReceivedObj(lines[num[thread_id]], keyword[keyword_num[thread_id]])
             #print(tree)
             #print(print_format)
             #print("leadID:%s" % leadID)
             #print("keywordID:%s" % keywordID)
             #print("%s" % chunkdic)
-            upSentencedic[num[thread_id]][keyword[keyword_num[thread_id]]] = analysiser.stepFourteen(leadID[num[thread_id]], chunkdic[num[thread_id]], keychunkID[num[thread_id]], keytokenID[num[thread_id]], RelateGroupes[num[thread_id]], TokenGroupes[num[thread_id]])
+            upSentencedic[num[thread_id]][keyword[keyword_num[thread_id]]] = analysiser.stepFourteen(leadID[thread_id], chunkdic[thread_id], keychunkID[thread_id], keytokenID[thread_id], RelateGroupes[thread_id], TokenGroupes[thread_id])
             #if len(upSentencedic[num]) == 0:
               #upSentencedic[num] = ""
               #print("num:%s" % num)
