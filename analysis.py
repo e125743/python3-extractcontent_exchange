@@ -121,8 +121,7 @@ class AnalysisContent(object):
 
 
 
-    def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):
-        upSentencedic = []
+    def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):#, upSentencedic, num, key_one):
         #print("leadID:%s" % leadID)
 
         """
@@ -139,6 +138,7 @@ class AnalysisContent(object):
         #print("keytokenID:%s" % keytokenID)
 
         i = 0
+        upSentences = []
         for id in keychunkID:
           #print("keychunkID:%s" % id)
           keychunk = chunkdic[id]
@@ -286,9 +286,9 @@ class AnalysisContent(object):
               for key in sorted(upToken.keys()):
                 upSentence += upToken[key]
               #print("upSentence:%s" % upSentence)
-              upSentencedic.append(upSentence)
+              upSentences.append(upSentence)
           i += 1
-        return upSentencedic
+        return upSentences
         """
         for id in keychunkID:
           print("keywordChunk:%s" % chunkdic[id])

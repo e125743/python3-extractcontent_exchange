@@ -131,7 +131,9 @@ for num in range(0, len(lines)):
 
 all = 0
 if keyword_num > 0:
-  upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+  #upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+  upSentencedic = multiTask.multiPrange(lines, keyword, int(sys.argv[1]))
+  #print(upSentencedic)
   for i in range(keyword_num):
     for num in range(len(lines)):
       if keyword[i] in lines[num]:
