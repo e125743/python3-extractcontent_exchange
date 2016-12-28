@@ -5,6 +5,7 @@ import urllib.request
 import codecs
 import re
 import sys
+import time
 #import unicodedata
 #from functools import reduce
 import analysis
@@ -43,10 +44,18 @@ if (UrlNum <= 0):
   print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
   quit()
 
-sys.stdout.write("Please input a Keyword:")
-keyword = input()
+sys.stdout.write("Please input number of Keyword:")
+keyword_num = int(input())
+keyword = [None for i in range(keyword_num)]
 
+for i in range(keyword_num):
+  sys.stdout.write("Please input a Keyword:")
+  keyword[i] = input()
+
+#print(keyword)
+start = time.time()
 analysiser = analysis.AnalysisContent()
+all = 0
 for num in range(1, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
@@ -90,16 +99,23 @@ for num in range(1, UrlNum + 1):
       lines.remove("")
     except:                                                              
       break
-  for line in lines:
-    if keyword in line:
+  if keyword_num > 0:
+    for num in range(keyword_num):
+      for line in lines:
+        if keyword[num] in line:
+          print("\n本文:")
+          print("%s:%s\n" % (keyword[num], line))
+          leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword[num])
+          #print("leadID:%s" % leadID)
+          #print("keywordID:%s" % keywordID)
+          #print("%s" % chunkdic)
+          analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+          all += 1
+  else:
+    for line in lines:
       print("\n本文:")
       print("%s\n" % line)
-      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword)
-      #print("leadID:%s" % leadID)
-      #print("keywordID:%s" % keywordID)
-      #print("%s" % chunkdic)
-      analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
-
+      all += 1
   #html, title = extractor.as_html()
   #print("html:%s\ntitle:%s" % (html, title))
   #print("%s" % (type(title)))
@@ -112,3 +128,6 @@ for num in range(1, UrlNum + 1):
   
   #f.write(title)
   #f.close()
+elapsed_time = time.time() - start
+print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+print("Sample_num:%s" % all)
