@@ -9,6 +9,8 @@ import time
 #import unicodedata
 #from functools import reduce
 import analysis
+import os
+import mysql.connector
 
 def conv_encoding(data):
     lookup = ('utf_8', 'euc_jp', 'euc_jis_2004', 'euc_jisx0213',
@@ -31,6 +33,73 @@ def conv_encoding(data):
         raise LookupError
 
 
+def insertSentences(sentence, keyword, connector, cursor):
+    '''
+    connector = mysql.connector.connect(
+                user='root',
+                password=os.environ['PASSWORD'],
+                host='localhost',
+                database='debugger')
+    cursor = connector.cursor()
+    '''
+    cursor.execute("select id from sentences where sentence = '" + sentence + "' and keyword = '" + keyword + "';")
+    #print(cursor.fetchall())
+    sentences = cursor.fetchall()
+
+    if len(sentences) == 0:
+        print("row is null")
+        #sys.stdout.write("Do you input %s or not?(Y/N)" % sentence)
+        #flag = input()
+        #if flag == 'Y':
+        cursor.execute("insert into sentences(sentence, keyword) values('" + sentence + "', '" + keyword + "');")
+        print("Input a keyword:%s\n" % keyword + "sentence:%s" % sentence)
+
+    connector.commit()
+    '''
+    cursor.close
+    connector.close
+    '''
+    return sentences
+
+
+
+def insertProgramLaws(sentencesId, answer, lawNumber, connector, cursor):
+    '''
+    connector = mysql.connector.connect(
+                user='root',
+                password=os.environ['PASSWORD'],
+                host='localhost',
+                database='debugger')
+    cursor = connector.cursor()
+    '''
+    cursor.execute("select answer from programLaws where sentences_id = " + sentencesId + " and law_number = " + lawNumber + ";")
+    #print(cursor.fetchall())
+    sentences = cursor.fetchall()
+
+    if len(sentences) == 0:
+        print("row is null")
+        #sys.stdout.write("Do you input %s or not?(Y/N)" % sentence)
+        #flag = input()
+        #if flag == 'Y':
+        cursor.execute("insert into programLaws(sentences_id, answer, law_number) values(" + sentencesId + ", '" + answer + "'," + lawNumber + ");")
+        print("Input a law_number:%s\n" % lawNumber + "answer:%s" % answer)
+    else:
+        i = 0
+        for row in sentences:
+            if answer == row[0]:
+                i = i + 1
+        if i == 0:
+            cursor.execute("insert into programLaws(sentences_id, answer, law_number) values(" + sentencesId + ", '" + answer + "'," + lawNumber + ");")
+            print("Input a law_number:%s\n" % lawNumber + "answer:%s" % answer)
+            
+
+    connector.commit()
+    '''
+    cursor.close
+    connector.close
+    '''
+
+
 extractor = extractcontent.ExtractContent()
 
 opt = {"threshold":1, "continuous_factor": 1.00, "punctuation_weight": 20}#, "debug": True}
@@ -39,6 +108,13 @@ extractor.set_default(opt)
 argvs = sys.argv
 argc = len(argvs)
 UrlNum = argc - 1
+
+connector = mysql.connector.connect(
+            user='root',
+            password=os.environ['PASSWORD'],
+            host='localhost',
+            database='debugger')
+cursor = connector.cursor()
 
 if (UrlNum <= 0):
   print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
@@ -105,11 +181,21 @@ for num in range(1, UrlNum + 1):
         if keyword[num] in line:
           print("\n本文:")
           print("%s:%s\n" % (keyword[num], line))
+          sentences = insertSentences(line, keyword[num], connector, cursor)
+          for k in sentences:
+            id = k[0]
           leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysiser.ReceivedObj(line, keyword[num])
           #print("leadID:%s" % leadID)
           #print("keywordID:%s" % keywordID)
           #print("%s" % chunkdic)
-          analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+          lawNumber = "14"
+          upSentencedic = analysiser.stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+          if id is not '':
+            for upSentence in upSentencedic:
+              print(upSentence)
+              print(id)
+              insertProgramLaws(str(id), upSentence, lawNumber, connector, cursor)
+          id = ''
           all += 1
   else:
     for line in lines:
@@ -128,6 +214,9 @@ for num in range(1, UrlNum + 1):
   
   #f.write(title)
   #f.close()
+cursor.close
+connector.close
+
 elapsed_time = time.time() - start
 print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 print("Sample_num:%s" % all)

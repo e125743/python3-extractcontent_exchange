@@ -137,6 +137,7 @@ class AnalysisContent(object):
         print("keychunkID:%s" % keychunkID)
         print("keytokenID:%s" % keytokenID)
 
+        upSentencedic = []
         i = 0
         for id in keychunkID:
           print("keychunkID:%s" % id)
@@ -285,8 +286,10 @@ class AnalysisContent(object):
               for key in sorted(upToken.keys()):
                 upSentence += upToken[key]
               print("upSentence:%s" % upSentence)
-            
+              upSentencedic.append(upSentence)
+
           i += 1
+        return upSentencedic
         """
         for id in keychunkID:
           print("keywordChunk:%s" % chunkdic[id])
