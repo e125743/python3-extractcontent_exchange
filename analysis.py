@@ -92,10 +92,10 @@ class AnalysisContent(object):
             print("%s" % text[1])
 
 
-            if "動詞" in text[0] and "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:
+            if "動詞" in text[0] and "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:# and "基本形" in text[0]:
               endflag = 1
               print("自立a%s" % endflag)
-            elif ("助動詞" or "助詞" or "動詞" in text[0]) and endflag == 1 and basicflag == 0:
+            elif ("助動詞" or "助詞" or "動詞" in text[0]) and endflag == 1 and basicflag == 0:# and "基本形" in text[0]:
               endflag = 1
               print("自立b%s" % endflag)
             else:
@@ -225,13 +225,14 @@ class AnalysisContent(object):
                   print("endchunk:%s" % chunkdic[Groupe[-1]])
                   print("%s" % Groupe)
 
-                  for chunkid in sorted(Groupe, reverse=True):
-                    if endtokenid == 0:
-                      endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
-                    else:
-                      print("endtokenid:%s" % endtokenid)
-                      print("sentenceEnd:%s" % sentenceEnd)
-                      break
+                  for chunkid in sorted(Groupe):#, reverse=True):
+                    if chunkid >= id:
+                      if endtokenid == 0:
+                        endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
+                      else:
+                        print("endtokenid:%s" % endtokenid)
+                        print("sentenceEnd:%s" % sentenceEnd)
+                        break
 
               if endtokenid == 0:
                 for Groupe in RelateGroupes:

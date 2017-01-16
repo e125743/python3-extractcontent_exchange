@@ -53,6 +53,9 @@ def insertSentences(sentence, keyword, connector, cursor):
         #if flag == 'Y':
         cursor.execute("insert into sentences(sentence, keyword) values('" + sentence + "', '" + keyword + "');")
         print("Input a keyword:%s\n" % keyword + "sentence:%s" % sentence)
+        cursor.execute("select id from sentences where sentence = '" + sentence + "' and keyword = '" + keyword + "';")
+        #print(cursor.fetchall())
+        sentences = cursor.fetchall()
 
     connector.commit()
     '''
