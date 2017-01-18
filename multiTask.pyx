@@ -27,7 +27,7 @@ def multiTask(lines, keyword, num_threads):
     keytokenID.append([])
     RelateGroupes.append([])
     TokenGroupes.append([])
-  start = time.time()
+  #start = time.time()
   with nogil, parallel(num_threads=thread_max):
     with gil:
       thread_id = openmp.omp_get_thread_num()
@@ -36,17 +36,17 @@ def multiTask(lines, keyword, num_threads):
           #print("num:%s" % num[thread_id] + "%s" % lines[num[thread_id]])
           if keyword[keyword_num[thread_id]] in lines[num[thread_id]]:
             #print("num%s:" % num[thread_id] + "%s" % lines[num[thread_id]])
-            #print("thread:%s" % thread_id)
-            elapsed_time = time.time() - start
-            print("ReceivedObj_start:{0}".format(elapsed_time) + "[sec]" + ":%s" % thread_id)
+            print("thread:%s" % thread_id)
+            #elapsed_time = time.time() - start
+            #print("ReceivedObj_start:{0}".format(elapsed_time) + "[sec]" + ":%s" % thread_id)
             leadID[thread_id], chunkdic[thread_id], keychunkID[thread_id], keytokenID[thread_id], RelateGroupes[thread_id], TokenGroupes[thread_id] = analysiser[thread_id].ReceivedObj(lines[num[thread_id]], keyword[keyword_num[thread_id]])
             #print(tree)
             #print(print_format)
             #print("leadID:%s" % leadID)
             #print("keywordID:%s" % keywordID)
             #print("%s" % chunkdic)
-            elapsed_time = time.time() - start
-            print("stepFourteen_start:{0}".format(elapsed_time) + "[sec]" + ":%s" % thread_id)
+            #elapsed_time = time.time() - start
+            #print("stepFourteen_start:{0}".format(elapsed_time) + "[sec]" + ":%s" % thread_id)
             upSentencedic[num[thread_id]][keyword[keyword_num[thread_id]]] = analysiser[thread_id].stepFourteen(leadID[thread_id], chunkdic[thread_id], keychunkID[thread_id], keytokenID[thread_id], RelateGroupes[thread_id], TokenGroupes[thread_id])
             #if len(upSentencedic[num]) == 0:
               #upSentencedic[num] = ""
@@ -57,6 +57,7 @@ def multiTask(lines, keyword, num_threads):
               #for upSentence in upSentencedic]:
                 #print(upSentence)
   #print(upSentencedic)
+  print(openmp.omp_get_max_threads())
   return upSentencedic
 
 
@@ -107,4 +108,5 @@ def multiPrange(lines, keyword, num_threads):
               #for upSentence in upSentencedic]:
                 #print(upSentence)
   #print(upSentencedic)
+  print(openmp.omp_get_max_threads())
   return upSentencedic

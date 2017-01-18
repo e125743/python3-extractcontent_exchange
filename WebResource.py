@@ -68,6 +68,7 @@ if (UrlNum <= 0):
   print('Usage: # python %s pthread_number URL1 URL2 ... URLn' % argvs[0])
   quit()
 
+'''
 sys.stdout.write("Please input number of Keyword:")
 keyword_num = int(input())
 keyword = [None for i in range(keyword_num)]
@@ -75,6 +76,9 @@ keyword = [None for i in range(keyword_num)]
 for i in range(keyword_num):
   sys.stdout.write("Please input a Keyword:")
   keyword[i] = input()
+'''
+keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
+keyword_num = len(keyword)
 
 start = time.time()
 lines_thread_num = int(sys.argv[1])
@@ -131,9 +135,11 @@ for num in range(0, len(lines)):
 
 all = 0
 if keyword_num > 0:
-  #upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
-  upSentencedic = multiTask.multiPrange(lines, keyword, int(sys.argv[1]))
+  upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+  #upSentencedic = multiTask.multiPrange(lines, keyword, int(sys.argv[1]))
   #print(upSentencedic)
+
+'''
   for i in range(keyword_num):
     for num in range(len(lines)):
       if keyword[i] in lines[num]:
@@ -144,6 +150,8 @@ else:
   for num in range(len(lines)):
     print("\n%s:" % num + "%s\n" % lines[num])
     all += 1
+'''
+
 '''
 thread_num = int(sys.argv[1])
 lines_length = len(lines)
