@@ -83,6 +83,7 @@ class AnalysisContent(object):
         alltext = ""
         endflag = 0
         basicflag = 0
+        continuous = 0
         for id,text in sorted(chunkdic[chunkid].items()):
           if isinstance(text, list):
             alltext += text[1]
@@ -92,7 +93,7 @@ class AnalysisContent(object):
             print("%s" % text[1])
 
 
-            if "動詞" in text[0] and "自立" in text[0] and "非自立" not in text[0] and endflag == 0 and basicflag == 0:# and "基本形" in text[0]:
+            if "動詞" in text[0] and "自立" in text[0] and endflag == 0 and basicflag == 0 and "連用形" not in text[0]:# or ("助動詞" in text[0] and "基本形" in text[0]): and "基本形" in text[0]: and "非自立" not in text[0]
               endflag = 1
               print("自立a%s" % endflag)
             elif ("助動詞" or "助詞" or "動詞" in text[0]) and endflag == 1 and basicflag == 0:# and "基本形" in text[0]:
@@ -105,6 +106,13 @@ class AnalysisContent(object):
             if "基本形" in text[0]:
               basicflag = 1
               print("基本形")
+
+            if continuous == 0 and "連用形" in text[0] and "自立" in text[0] and "非自立" not in text[0]:
+              continuous = 1
+            elif continuous == 1 and "基本形" in text[0]:
+              endflag = 1
+            else:
+              continuous = 0
 
             if endflag == 1:
               print("endtoken:%s" % alltext)
