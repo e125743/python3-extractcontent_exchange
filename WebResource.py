@@ -77,10 +77,10 @@ for i in range(keyword_num):
   sys.stdout.write("Please input a Keyword:")
   keyword[i] = input()
 '''
-keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
+#keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
+keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch']
 keyword_num = len(keyword)
 
-start = time.time()
 lines_thread_num = int(sys.argv[1])
 analysiser = analysis.AnalysisContent()
 lines = []
@@ -134,10 +134,15 @@ for num in range(0, len(lines)):
 '''
 
 all = 0
+start = time.time()
 if keyword_num > 0:
-  upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
+  #upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
   #upSentencedic = multiTask.multiPrange(lines, keyword, int(sys.argv[1]))
+  upSentencedic = multiTask.multiList(lines, keyword, int(sys.argv[1]))
   #print(upSentencedic)
+
+  #for i in upSentencedic:
+    #print(i)
 
 '''
   for i in range(keyword_num):
