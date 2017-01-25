@@ -3,9 +3,7 @@ import sys
 import CaboCha
 import xml.etree.ElementTree as ET
 
-class AnalysisContent(object):
-
-      def ReceivedObj(self, sentence, keyword):
+def ReceivedObj(sentence, keyword):
         c = CaboCha.Parser()
         tree =  c.parse(sentence)
         #print("%s" % tree.toString(CaboCha.FORMAT_TREE)) #簡易 Tree 表示での出力
@@ -77,7 +75,7 @@ class AnalysisContent(object):
 
 
 
-      def setEndToken(chunkid, chunkdic):
+def setEndToken(chunkid, chunkdic):
         endtokenid = 0
         sentenceEnd = 0
         alltext = ""
@@ -121,7 +119,7 @@ class AnalysisContent(object):
 
 
 
-      def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):#, upSentencedic, num, key_one):
+def stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):#, upSentencedic, num, key_one):
         #print("leadID:%s" % leadID)
 
         """
@@ -188,7 +186,7 @@ class AnalysisContent(object):
                       #print("%s" % sorted(set(rearLast), reverse=True))
                       for chunkid in sorted(set(rearLast), reverse=True):
                         if endtokenid == 0:
-                          endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
+                          endtokenid,sentenceEnd=setEndToken(chunkid, chunkdic)
                           #print("%s" % endtokenid)
                         else:
                           #print("endtokenid:%s" % endtokenid)
@@ -200,7 +198,7 @@ class AnalysisContent(object):
                       if id in Groupe:
                         for chunkid in sorted(Groupe, reverse=True):
                           if endtokenid == 0:
-                            endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
+                            endtokenid,sentenceEnd=setEndToken(chunkid, chunkdic)
                           else:
                             #print("endtokenid:%s" % endtokenid)
                             #print("sentenceEnd:%s" % sentenceEnd)
@@ -227,7 +225,7 @@ class AnalysisContent(object):
 
                   for chunkid in sorted(Groupe, reverse=True):
                     if endtokenid == 0:
-                      endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
+                      endtokenid,sentenceEnd=setEndToken(chunkid, chunkdic)
                     else:
                       #print("endtokenid:%s" % endtokenid)
                       #print("sentenceEnd:%s" % sentenceEnd)
@@ -239,7 +237,7 @@ class AnalysisContent(object):
 
                     for chunkid in sorted(Groupe, reverse=True):
                       if endtokenid == 0:
-                         endtokenid,sentenceEnd=AnalysisContent.setEndToken(chunkid, chunkdic)
+                         endtokenid,sentenceEnd=setEndToken(chunkid, chunkdic)
                       else:
                         #print("endtokenid:%s" % endtokenid)
                         #print("sentenceEnd:%s" % sentenceEnd)
