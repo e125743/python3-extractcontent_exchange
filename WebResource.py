@@ -5,7 +5,7 @@ import urllib.request
 import codecs
 import re
 import sys
-import math
+#import math
 import time
 #from cython.parallel cimport parallel
 #cimport openmp
