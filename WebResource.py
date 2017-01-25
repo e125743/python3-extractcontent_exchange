@@ -10,10 +10,33 @@ import time
 #from cython.parallel cimport parallel
 #cimport openmp
 #from multiprocessing import Process, Pipe
+import multiprocessing as mp
 #import unicodedata
 #from functools import reduce
-import analysis
 import multiTask
+import analysis
+
+def multiTask(sentence, keyword, line_num):
+  upSentences = {}
+  for key in keyword:
+    if key in sentence:
+      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(sentence, key)
+      upSentences[key] = analysis.AnalysisContent().stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+
+  return {line_num:upSentences}
+
+
+
+def wrapper_plus_data(args):
+  return multiTask(*args)
+
+
+
+def multiTask_one(key_lines, thread_num):
+  pool = mp.Pool(thread_num)
+  return pool.map(wrapper_plus_data, key_lines)
+
+
 
 '''
 def lines_task(lines, keyword):
@@ -78,11 +101,11 @@ for i in range(keyword_num):
   keyword[i] = input()
 '''
 #keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
-keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch']
+keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch', 'iPhone 6s Plus', 'iPad Pro', 'iPad Air']
 keyword_num = len(keyword)
 
-lines_thread_num = int(sys.argv[1])
-analysiser = analysis.AnalysisContent()
+thread_num = int(sys.argv[1])
+#analysiser = analysis.AnalysisContent()
 lines = []
 for num in range(2, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
@@ -138,24 +161,27 @@ start = time.time()
 if keyword_num > 0:
   #upSentencedic = multiTask.multiTask(lines, keyword, int(sys.argv[1]))
   #upSentencedic = multiTask.multiPrange(lines, keyword, int(sys.argv[1]))
-  upSentencedic = multiTask.multiList(lines, keyword, int(sys.argv[1]))
+  #upSentencedic = multiTask.multiList(lines, keyword, int(sys.argv[1]))
   #print(upSentencedic)
+
+  key_lines = [(lines[i], keyword, i) for i in range(len(lines))]
+  answerLines = multiTask_one(key_lines, thread_num)
 
   #for i in upSentencedic:
     #print(i)
 
-'''
+
   for i in range(keyword_num):
     for num in range(len(lines)):
       if keyword[i] in lines[num]:
         print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
-        print(upSentencedic[num][keyword[i]])
+        print(answerLines[num])
         all += 1
 else:
   for num in range(len(lines)):
     print("\n%s:" % num + "%s\n" % lines[num])
     all += 1
-'''
+
 
 '''
 thread_num = int(sys.argv[1])
@@ -198,7 +224,7 @@ for process in processes:
   
 #f.write(html)
 #f.write(title)
-  
+
 title = extractor.extract_title(file)
 print("title:%s" % title)
   
