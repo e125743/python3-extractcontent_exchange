@@ -173,10 +173,12 @@ if keyword_num > 0:
 
   for i in range(keyword_num):
     for num in range(len(lines)):
-      if keyword[i] in lines[num]:
-        print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
-        print(answerLines[num])
-        all += 1
+      for value in answerLines[num].values():
+        for key in value.keys():
+          if keyword[i] in key:
+            print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+            print(value[keyword[i]])
+            all += 1
 else:
   for num in range(len(lines)):
     print("\n%s:" % num + "%s\n" % lines[num])
