@@ -12,21 +12,54 @@ import time
 #from multiprocessing import Process, Pipe
 import multiprocessing as mp
 #import unicodedata
-#from functools import reduce
+from functools import reduce
 import multiTask
 import analysis
 
-def multiTask(sentence, keyword, line_num):
+'''
+def divide_list(xs, n):
+    q = len(xs) // n
+    m = len(xs) % n
+
+    return reduce(
+        lambda acc, i:
+            (lambda fr = sum([ len(x) for x in acc ]):
+                acc + [ xs[fr:(fr + q + (1 if i < m else 0))] ]
+            )()
+        ,
+        range(n),
+        []
+    )
+
+def lists_multiTask(key_lines):
+  upSentenceDic = {}
+  #i = 0
+  for line in key_lines[0]:
+    upSentences = {}
+    for key in key_lines[1]:
+      if key in line:
+        #print(mp.current_process())
+        leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(line, key)
+        upSentences[key] = analysis.AnalysisContent().stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+    upSentenceDic[line] = upSentences
+    #print(i)
+    #i = i + 1
+  return upSentenceDic
+'''
+
+
+def multiTask(key_lines):#sentence, keyword, line_num):
   upSentences = {}
-  for key in keyword:
-    if key in sentence:
-      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(sentence, key)
+  for key in key_lines[1]:#keyword:
+    if key in key_lines[0]:#sentence:
+      #print(mp.current_process())
+      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(key_lines[0], key)#sentence, key)
       upSentences[key] = analysis.AnalysisContent().stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
 
-  return {line_num:upSentences}
+  return {key_lines[2]:upSentences}#{line_num:upSentences}
 
 
-
+'''
 def wrapper_plus_data(args):
   return multiTask(*args)
 
@@ -35,7 +68,7 @@ def wrapper_plus_data(args):
 def multiTask_one(key_lines, thread_num):
   pool = mp.Pool(thread_num)
   return pool.map(wrapper_plus_data, key_lines)
-
+'''
 
 
 '''
@@ -100,8 +133,8 @@ for i in range(keyword_num):
   sys.stdout.write("Please input a Keyword:")
   keyword[i] = input()
 '''
-keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
-#keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch', 'iPhone 6s Plus', 'iPad Pro', 'iPad Air']
+#keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
+keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch', 'iPhone 6s Plus', 'iPad Pro', 'iPad Air']
 keyword_num = len(keyword)
 
 thread_num = int(sys.argv[1])
@@ -164,12 +197,22 @@ if keyword_num > 0:
   #upSentencedic = multiTask.multiList(lines, keyword, int(sys.argv[1]))
   #print(upSentencedic)
 
-  key_lines = [(lines[i], keyword, i) for i in range(len(lines))]
-  answerLines = multiTask_one(key_lines, thread_num)
+  #key_lines = [[lines[i], keyword, i] for i in range(len(lines))]
+  #answerLines = multiTask_one(key_lines, thread_num)
 
+  #lists = divide_list(lines, thread_num)
+  #key_lines = [[lines, keyword] for lines in lists]
+  #pool = mp.Pool(thread_num)
+  #answerLines = []
+  #answerLines = pool.map(lists_multiTask, key_lines)
+
+  key_lines = [(lines[i], keyword, i) for i in range(len(lines))]
+  pool = mp.Pool(thread_num)
+  answerLines = pool.map(multiTask, key_lines)
+  
+  #print(answerLines)
   #for i in upSentencedic:
     #print(i)
-
 
   for i in range(keyword_num):
     for num in range(len(lines)):
@@ -179,6 +222,22 @@ if keyword_num > 0:
             print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
             print(value[keyword[i]])
             all += 1
+
+  '''
+  for k in answerLines:
+    for i in range(keyword_num):
+      for num in range(len(lines)):
+        for line_key in k.keys():
+          if line_key == lines[num]:
+            #print("key:%s" % line_key)
+            #print(lines[num])
+            for key in k[lines[num]].keys():
+              if keyword[i] in key:
+                print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+                print(k[lines[num]][keyword[i]])
+                all += 1
+  '''
+
 else:
   for num in range(len(lines)):
     print("\n%s:" % num + "%s\n" % lines[num])
@@ -235,3 +294,4 @@ print("title:%s" % title)
 elapsed_time = time.time() - start
 print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 print("Sample_num:%s" % all)
+#print(mp.cpu_count())

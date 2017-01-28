@@ -22,7 +22,7 @@ def divide_list(xs, n):
         []
     )
 
-def multiList(lines, keywords, num_threads):
+Def multiList(lines, keywords, num_threads):
   cdef int thread_id
   cdef int thread_max = num_threads
   cdef lists = divide_list(lines, num_threads)
