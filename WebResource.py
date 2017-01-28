@@ -12,7 +12,7 @@ import time
 #from multiprocessing import Process, Pipe
 import multiprocessing as mp
 #import unicodedata
-from functools import reduce
+#from functools import reduce
 import multiTask
 import analysis
 
