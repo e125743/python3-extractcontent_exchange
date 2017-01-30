@@ -12,9 +12,10 @@ import time
 #from multiprocessing import Process, Pipe
 import multiprocessing as mp
 #import unicodedata
-from functools import reduce
+#from functools import reduce
 import multiTask
 import analysis
+#from concurrent.futures import ProcessPoolExecutor, as_completed
 
 '''
 def divide_list(xs, n):
@@ -47,15 +48,15 @@ def lists_multiTask(key_lines):
   return upSentenceDic
 '''
 
-
-def multiTask(key_lines):#sentence, keyword, line_num):
+def multiTask(key_lines):#sentence, keyword, line_index, line_num):
   upSentences = {}
+  '''
   for key in key_lines[1]:#keyword:
     if key in key_lines[0]:#sentence:
-      #print(mp.current_process())
-      leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(key_lines[0], key)#sentence, key)
-      upSentences[key] = analysis.AnalysisContent().stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
-
+  '''
+  leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes = analysis.AnalysisContent().ReceivedObj(key_lines[0], key_lines[1])#sentence, key)
+  upSentences[key_lines[1]] = analysis.AnalysisContent().stepFourteen(leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes)
+  #print("%s" % mp.current_process() + "%s" % key_lines[3])#upSentences)
   return {key_lines[2]:upSentences}#{line_num:upSentences}
 
 
@@ -200,38 +201,112 @@ if keyword_num > 0:
   #key_lines = [[lines[i], keyword, i] for i in range(len(lines))]
   #answerLines = multiTask_one(key_lines, thread_num)
 
-  #lists = divide_list(lines, thread_num)
-  #key_lines = [[lines, keyword] for lines in lists]
-  #pool = mp.Pool(thread_num)
-  #answerLines = []
-  #answerLines = pool.map(lists_multiTask, key_lines)
-
-  key_lines = [(lines[i], keyword, i) for i in range(len(lines))]
+  '''
+  lists = divide_list(lines, thread_num)
+  key_lines = [[line, keyword] for line in lists]
+  for li in lists:
+    print(li)
   pool = mp.Pool(thread_num)
-  answerLines = pool.map(multiTask, key_lines)
+  answerLines = []
+  answerLines = pool.map(lists_multiTask, key_lines)
+  '''
+
+  #pool = ProcessPoolExecutor(thread_num)
+
+  #key_lines = [(lines[i], keyword, i) for i in range(len(lines))]
   
+  key_lines = []
+  #k = 0
+  for i in range(len(lines)):
+    #l = 0
+    for key in keyword:
+      if key in lines[i]:# and l == 0:
+        key_lines.append((lines[i], key, i))#, k))
+        #print("k:%s" % k)
+        #print("line:%s" % i)
+        #k += 1
+        #l += 1
+      #else:
+        #continue
+
+  '''
+  size, extra = divmod(len(key_lines), thread_num)
+  if extra > 0:
+    chunksize = size + 1
+  else:
+    chunksize = size
+  '''
+
+  pool = mp.Pool(thread_num)
+  answerLines = pool.map(multiTask, key_lines)#, chunksize)
+  #print(divmod(len(key_lines), thread_num))
+
+  '''
   #print(answerLines)
+  #Poolの呼び出し
+  for answerLine in answerLines:
+    for num in range(len(lines)):
+      for key_lin in answerLine.keys():
+        i = 0
+        if key_lin == num and i == 0:
+          i += 1
+          for value in answerLine.values():
+            for key in value.keys():
+              for i in range(keyword_num):
+                if key == keyword[i]:
+                  print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+                  print(answerLine[num][keyword[i]])
+                  all += 1
+        else:
+          continue
+  '''
+
+  
+  for answerLine in answerLines:
+    for line_num in answerLine.keys():
+      print("sentence:%s" % lines[line_num])
+      for sentences in answerLine[line_num].values():
+        print(answerLine[line_num].keys())
+        all += 1
+        print("Answer:%s" % sentences)
+      print("\n")
+  
+
+  #print([i for i in range(55, len(lines))])
+
   #for i in upSentencedic:
     #print(i)
 
-  for i in range(keyword_num):
-    for num in range(len(lines)):
-      for value in answerLines[num].values():
-        for key in value.keys():
-          if keyword[i] in key:
-            print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
-            print(value[keyword[i]])
-            all += 1
 
   '''
-  for k in answerLines:
+  #ProcessPoolExecutorの呼び出し
+  for sentence in answerLines:
     for i in range(keyword_num):
+      #print(sentence)
       for num in range(len(lines)):
-        for line_key in k.keys():
-          if line_key == lines[num]:
-            #print("key:%s" % line_key)
-            #print(lines[num])
-            for key in k[lines[num]].keys():
+        #print(sentence)
+        for num_key in sentence.keys():
+          if num_key == num:
+            #print("num:%s" % num + "num_key:%s" % num_key)
+            for key in sentence[num_key].keys():
+              if keyword[i] in key:
+                print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
+                print(sentence[num_key][keyword[i]])
+                all += 1
+            continue
+  pool.shutdown()
+  '''
+
+  '''
+  #lists_maltiTaskの呼び出し
+  for k in answerLines:
+    for num in range(len(lines)):
+      for line_key in k.keys():
+        if line_key == lines[num]:
+          #print("key:%s" % line_key)
+          #print(lines[num])
+          for key in k[lines[num]].keys():
+            for i in range(keyword_num):
               if keyword[i] in key:
                 print("\n%s:" % num + "%s:\n%s" % (keyword[i], lines[num]))
                 print(k[lines[num]][keyword[i]])
@@ -295,3 +370,4 @@ elapsed_time = time.time() - start
 print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 print("Sample_num:%s" % all)
 #print(mp.cpu_count())
+#print(len(lines))
