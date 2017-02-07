@@ -1,7 +1,7 @@
 # python3-extractcontent_exchange
 
 # Execution means
-python3.5 WebResource.py "SubProcessNumber:int" "URL1:string" ... "URLn:string"
+python3.5 WebResource.py "SubProcessNumber:int" "URL1:string" ... "URLn:string"  
 example:python3.5 WebResource.py 4 http://www.itmedia.co.jp/mobile/articles/1509/10/news166.html http://www.itmedia.co.jp/mobile/articles/1509/10/news166_2.html http://www.itmedia.co.jp/mobile/articles/1509/10/news166_3.html
 
 # Explain Source
