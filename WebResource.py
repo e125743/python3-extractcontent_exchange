@@ -13,7 +13,7 @@ import time
 import multiprocessing as mp
 #import unicodedata
 #from functools import reduce
-import multiTask
+#import multiTask
 import analysis
 #from concurrent.futures import ProcessPoolExecutor, as_completed
 
@@ -119,7 +119,7 @@ extractor.set_default(opt)
 
 argvs = sys.argv
 argc = len(argvs)
-UrlNum = argc - 1
+UrlNum = argc - 2
 
 if (UrlNum <= 0):
   print('Usage: # python %s pthread_number URL1 URL2 ... URLn' % argvs[0])
@@ -141,7 +141,7 @@ keyword_num = len(keyword)
 thread_num = int(sys.argv[1])
 #analysiser = analysis.AnalysisContent()
 lines = []
-for num in range(2, UrlNum + 1):
+for num in range(2, argc):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
   
