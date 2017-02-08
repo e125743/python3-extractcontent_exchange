@@ -66,7 +66,7 @@ def insertSentences(sentence, keyword, connector, cursor):
 
 
 
-def insertProgramLaws(sentencesId, answer, lawNumber, connector, cursor):
+def insertProgramLaws(sentencesId, answer, lawNumber, connector, cursor, index, lawAnswer, fp):
     '''
     connector = mysql.connector.connect(
                 user='root',
@@ -86,6 +86,13 @@ def insertProgramLaws(sentencesId, answer, lawNumber, connector, cursor):
         #if flag == 'Y':
         cursor.execute("insert into programLaws(sentences_id, answer, law_number) values(" + sentencesId + ", '" + answer + "'," + lawNumber + ");")
         print("Input a law_number:%s\n" % lawNumber + "answer:%s" % answer)
+        cursor.execute("select id from programLaws order by id desc limit 1")
+        programId = cursor.fetchall()
+        print("%s " % lawAnswer[0] + "%s " % programId[0] + "%s " % lawAnswer[1] + "%s" % lawAnswer[2])
+        program_id = list(programId[0])
+        writeData = lawAnswer[0] + " " + str(program_id[0]) + " " + lawAnswer[1] + " " + lawAnswer[2]
+        fp.write(writeData)
+        index = index + 1
     else:
         i = 0
         for row in sentences:
@@ -94,9 +101,17 @@ def insertProgramLaws(sentencesId, answer, lawNumber, connector, cursor):
         if i == 0:
             cursor.execute("insert into programLaws(sentences_id, answer, law_number) values(" + sentencesId + ", '" + answer + "'," + lawNumber + ");")
             print("Input a law_number:%s\n" % lawNumber + "answer:%s" % answer)
+            cursor.execute("select id from programLaws order by id desc limit 1")
+            programId = cursor.fetchall()
+            print("%s " % lawAnswer[0] + "%s " % programId[0] + "%s " % lawAnswer[1] + "%s" % lawAnswer[2])
+            program_id = list(programId[0])
+            writeData = lawAnswer[0] + " " + str(program_id[0]) + " " + lawAnswer[1] + " " + lawAnswer[2]
+            fp.write(writeData)
+            index = index + 1
             
 
     connector.commit()
+    return index
     '''
     cursor.close
     connector.close
@@ -123,6 +138,7 @@ if (UrlNum <= 0):
   print('Usage: # python %s URL1 URL2 ... URLn Y/N:Search about keyword or not?' % argvs[0])
   quit()
 
+'''
 sys.stdout.write("Please input number of Keyword:")
 keyword_num = int(input())
 keyword = [None for i in range(keyword_num)]
@@ -130,11 +146,28 @@ keyword = [None for i in range(keyword_num)]
 for i in range(keyword_num):
   sys.stdout.write("Please input a Keyword:")
   keyword[i] = input()
+'''
 
+keyword = ['Apple TV', 'Apple Pencil']
+keyword_num = len(keyword)
 #print(keyword)
 start = time.time()
 analysiser = analysis.AnalysisContent()
 all = 0
+
+fp = open('./answer.txt', 'r')
+answerLines = fp.readlines()
+print(answerLines)
+fp.close()
+
+answerData = []
+for answerLine in answerLines:
+  answerData.append(answerLine.split(" "))
+print(answerData)
+
+fp = open('./myLaws.txt', 'w')
+
+index = 0
 for num in range(1, UrlNum + 1):
   response = urllib.request.urlopen(argvs[num])
   html = response.read()
@@ -196,8 +229,9 @@ for num in range(1, UrlNum + 1):
           if id is not '':
             for upSentence in upSentencedic:
               print(upSentence)
-              print(id)
-              insertProgramLaws(str(id), upSentence, lawNumber, connector, cursor)
+              print(index)
+              index_p = insertProgramLaws(str(id), upSentence, lawNumber, connector, cursor, index, answerData[index], fp)
+              index = index_p
           id = ''
           all += 1
   else:
@@ -219,6 +253,7 @@ for num in range(1, UrlNum + 1):
   #f.close()
 cursor.close
 connector.close
+fp.close
 
 elapsed_time = time.time() - start
 print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
