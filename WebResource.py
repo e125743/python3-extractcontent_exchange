@@ -135,7 +135,8 @@ for i in range(keyword_num):
   keyword[i] = input()
 '''
 #keyword = [ 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s', 'iPhone 6s']
-keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch', 'iPhone 6s Plus', 'iPad Pro', 'iPad Air']
+#keyword = ['Apple TV', 'Apple Pencil', 'iPhone 6s', 'Apple Watch', 'iPhone 6s Plus', 'iPad Pro', 'iPad Air']
+keyword = ['Apple TV', 'Apple Pencil']
 keyword_num = len(keyword)
 
 thread_num = int(sys.argv[1])
