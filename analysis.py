@@ -199,6 +199,32 @@ class AnalysisContent(object):
         return (endtokenid, sentenceEnd)
 
 
+    #特定のchunkを削除
+    def deleteChunk(leadID, chunkdic, RelateGroupes, TokenGroupes, delchunk):
+        #TokenGroupesから特定のchunkID（delchunk）を削除
+        del TokenGroupes[delchunk]
+        #print("TokenGroupes:%s" % TokenGroupes)
+
+        #chunkdicから特定のchunkID（delchunk）を削除
+        del chunkdic[delchunk]
+        #print("chunkdic:%s" % chunkdic)
+
+        #leadIDから特定のchunkID（delchunk）を削除
+        if delchunk in leadID:
+          leadID.remove(delchunk)
+          #print("leadID:%s" % leadID)
+
+        #RelateGroupesから特定のchunkID（delchunk）を削除
+        newRelateGroupes = []
+        for Relate in RelateGroupes:
+          if delchunk in Relate:
+            Relate.remove(delchunk)
+          newRelateGroupes.append(Relate)
+        #print("newRelateGroupes:%s" % newRelateGroupes)
+
+        return (leadID, chunkdic, newRelateGroupes, TokenGroupes)
+
+
 
     def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):
         #print("leadID:%s" % leadID)
@@ -223,12 +249,27 @@ class AnalysisContent(object):
         #興味キーワードのchunkIDを取得
         for id in keychunkID:
           print("keychunkID:%s" % id)
+
           #興味キーワードが含まれているchunkを取得
           keychunk = chunkdic[id]
           #興味キーワードが含まれているchunkの最後のtokenIDを取得
           keytokenEnd = TokenGroupes[id][-1]
           #興味キーワードが含まれているchunkの最初のtokenIDを取得
           keytokenFirst = TokenGroupes[id][0]
+
+          #興味キーワードの前にchunkが存在
+          if id != 0:
+            print("keyback:%s" % chunkdic[id - 1][TokenGroupes[id - 1][-1]])
+            #興味キーワードの前のtokenが形容詞
+            if "形容詞" in chunkdic[id - 1][TokenGroupes[id - 1][-1]][0]:
+              #興味キーワードが含まれているchunkの直前のtokenIDを取得
+              keytokenFirst = TokenGroupes[id - 1][-1]
+              print("keyFirst:%s" % keytokenFirst)
+            #興味キーワードの前のtokenが「の」
+            elif chunkdic[id - 1][TokenGroupes[id - 1][-1]][1] == 'の':
+              #興味キーワードが含まれているchunkの先頭のtokenIDを取得
+              keytokenFirst = TokenGroupes[id - 1][0]
+              print("keyFirst:%s" % keytokenFirst)
 
           #chunk内の興味キーワードの直後のtokenを取得成功
           try:
@@ -261,6 +302,9 @@ class AnalysisContent(object):
             #興味キーワードの後ろが「の」
             if keyrear[1] == 'の':
               print("Yes:%s" % keyrear[1])
+
+              #興味キーワードを含むchunkの直後のchunkを削除
+              leadID, chunkdic, RelateGroupes, TokenGroupes=AnalysisContent.deleteChunk(leadID, chunkdic, RelateGroupes, TokenGroupes, int(id) + 1)
 
               #係り受け関係にあるchunkID群を分割
               for Groupe in RelateGroupes:
