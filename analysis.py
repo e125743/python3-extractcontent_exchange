@@ -191,11 +191,21 @@ class AnalysisContent(object):
               print("endtoken:%s" % alltext)
               endtokenid = id
 
+          #係り受け先の終点の後ろが記号だった場合、その記号を終点に決定
+          if endtokenid != 0:
+            keys = sorted(chunkdic[chunkid].keys())
+            if keys[-2] > endtokenid:
+              print("keys:%s" % keys)
+              print("max:%s" % keys[-2])
+              if '記号' in chunkdic[chunkid][endtokenid + 1][0]:
+                endtokenid = endtokenid + 1
+
         #係り受け先の終点になる単語のまとめ
         #1.基本形の自立語の動詞
         #2.連用形、基本形以外の自立語の動詞の後の助詞、助動詞
         #3.連用形の自立語の後の基本形の動詞
         #4.単語「だ」と「である」
+        #5.1~4の後ろが記号
         return (endtokenid, sentenceEnd)
 
 
@@ -225,6 +235,34 @@ class AnalysisContent(object):
         return (leadID, chunkdic, newRelateGroupes, TokenGroupes)
 
 
+    #特定のtokenを削除
+    def deleteToken(chunkdic, TokenGroupes, deltoken):
+        #print("BeforeChunkdic:%s" % chunkdic)
+        #print("BeforeTokenGroupes:%s" % TokenGroupes)
+
+        newchunkdic = {}
+        #chunkIDとchunk内のtokenデータの取得
+        for chunkid in chunkdic.keys():
+          print("%s" % chunkid)
+
+          #tokenIDを分割
+          for tokenid in chunkdic[chunkid].keys():
+            print("token:%s" % chunkdic[chunkid][tokenid])
+            if isinstance(chunkdic[chunkid][tokenid], list) is True:
+
+              if deltoken in chunkdic[chunkid][tokenid][0]:
+                print("token:%s" % chunkdic[chunkid][tokenid])
+                TokenGroupes[chunkid].remove(tokenid)
+              else:
+                newchunkdic.setdefault(chunkid, {})[tokenid] = chunkdic[chunkid][tokenid]
+            else:
+              newchunkdic.setdefault(chunkid, {})[tokenid] = chunkdic[chunkid][tokenid]
+
+
+        print("DeleteChunkdic:%s" % newchunkdic)
+        print("DeleteTokenGroupes:%s" % TokenGroupes)
+        return (newchunkdic, TokenGroupes)
+
 
     def stepFourteen(self, leadID, chunkdic, keychunkID, keytokenID, RelateGroupes, TokenGroupes):
         #print("leadID:%s" % leadID)
@@ -242,6 +280,9 @@ class AnalysisContent(object):
         print("TokenGroupes:%s" % TokenGroupes)
         print("keychunkID:%s" % keychunkID)
         print("keytokenID:%s" % keytokenID)
+
+        #deltoken = '記号'
+        #chunkdic,TokenGroupes = AnalysisContent.deleteToken(chunkdic, TokenGroupes, deltoken)
 
         #法則14により生成された文
         upSentencedic = []
@@ -294,6 +335,10 @@ class AnalysisContent(object):
               keyrear = keychunk[int(keytokenID[i]) + 1]
 
           print("keyrear:%s" % keyrear)
+
+          #deltoken = '記号'
+          #chunkdic,TokenGroupes = AnalysisContent.deleteToken(chunkdic, TokenGroupes, deltoken)
+
 
           #興味キーワードの後ろのtokenが存在
           if len(keyrear) != 0:
