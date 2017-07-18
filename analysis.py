@@ -247,20 +247,28 @@ class AnalysisContent(object):
 
           #tokenIDを分割
           for tokenid in chunkdic[chunkid].keys():
-            print("token:%s" % chunkdic[chunkid][tokenid])
+            #print("token:%s" % chunkdic[chunkid][tokenid])
+
+            #取り出したtokenが文要素
             if isinstance(chunkdic[chunkid][tokenid], list) is True:
 
+              #tokenに特定の文要素（deltoken）が存在
               if deltoken in chunkdic[chunkid][tokenid][0]:
-                print("token:%s" % chunkdic[chunkid][tokenid])
+                #print("token:%s" % chunkdic[chunkid][tokenid])
+                #TokenGroupesからtokenIDを削除
                 TokenGroupes[chunkid].remove(tokenid)
+              #tokenに特定の文要素（deltoken）が不存在
               else:
+                #特定のtoken以外のtokenをchunkdicに保存
                 newchunkdic.setdefault(chunkid, {})[tokenid] = chunkdic[chunkid][tokenid]
+            #取り出したtokenが係り受け先のchunkID
             else:
+              #特定のtoken以外のtokenをchunkdicに保存
               newchunkdic.setdefault(chunkid, {})[tokenid] = chunkdic[chunkid][tokenid]
 
 
-        print("DeleteChunkdic:%s" % newchunkdic)
-        print("DeleteTokenGroupes:%s" % TokenGroupes)
+        #print("DeleteChunkdic:%s" % newchunkdic)
+        #print("DeleteTokenGroupes:%s" % TokenGroupes)
         return (newchunkdic, TokenGroupes)
 
 
@@ -469,8 +477,8 @@ class AnalysisContent(object):
                   #興味キーワードが存在しない係り受け関係のchunk
                   if id not in Groupe:
 
-                    #係り受け関係のchunkIDを逆順に分割
-                    for chunkid in sorted(Groupe, reverse=True):
+                    #係り受け関係のchunkIDを分割
+                    for chunkid in sorted(Groupe):#, reverse=True):
                       #興味キーワードの係り受け先の終点が未決定
                       if endtokenid == 0:
                          #興味キーワードの係り受け先の終点を決定

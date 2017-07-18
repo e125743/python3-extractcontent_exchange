@@ -1,27 +1,27 @@
-NULL 971 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、ApplePencil、多彩な製品が披露された新しいAppleTV ◯
-NULL 972 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、新しいAppleTVといった多彩な製品が披露されたApplePencil ◯
-NULL 973  ◯
-NULL 974 そしてiPadPro専用の入力ペンであるApplePencil ◯
-NULL 975 またAppleならではのこだわりとして、「指によるタッチ操作は明確に区別して、両者を混在にした新しいUIデザインを作っているApplePencil ×
-NULL 976 メールなどApple純正アプリだけでなく、MicrosoftのWordやExcel、PowerPointに手書きメモや図形を書き加えるApplePencil ◯
-NULL 977 内部に専用センサーを搭載して、高精度な書き心地を実現しているApplePencil ◯
-NULL 978  ◯
-NULL 979 「テレビを再発明する」新AppleTV ◯
-NULL 980 その言葉とともに、スクリーンに映し出されるAppleTV ◯
-NULL 981  ◯
-NULL 982 「アプリ」を軸にテレビを変えるAppleTV ◯
-NULL 983 その戦略製品という考えである新AppleTV ◯
-NULL 984 実際、今回発表されたその重責を担うに遜色ないできばえである第4世代AppleTV ×
-NULL 985 リモコンが基本UIとなるのはこれまでと同様だが、タッチ操作を実現するTouchSurfaceを搭載、音声入力Siriへの対応、ジャイロセンサーや加速度センサーにも対応した今回のAppleTV ◯
-NULL 986 これによりiPhoneやiPadに近い操作感覚を実現している新しいAppleTV ◯
-NULL 987 新たにiOSベースのtvOSが用意され、さまざまなアプリが開発・配布できるAppleTV ◯
-NULL 988 これまでもHuluなど一部の動画配信サービスはサポートしていたが、今後はより自由にAppleTV向けにアプリを開発し、サービスを提供できるAppleTV ◯
-NULL 989 これまでもHuluなど一部の動画配信サービスはAppleTV側でサポートしていたが、今後はより自由にアプリを開発し、サービスを提供できるAppleTV ◯
-NULL 990 すでにNETFLIX、Huluなどが名乗りをあげているが、例えば日本では、ドコモがアプリさえ用意すれば、「dTV」や「dアニメストア」などを提供するAppleTV ×
-NULL 991 このようにローカルなコンテンツ配信サービスでも、アプリを通じてサービス展開できるAppleTV ◯
-NULL 992  ◯
-NULL 993 GameCenterでユーザー認証を行うことで、iPhone/iPadでプレイ中のゲームの続きを、行うAppleTV ◯
-NULL 994 スマートテレビは多くのテレビメーカーが模索し、様々な提案が行われている分野だが、「iPhone/iPadで培ったエコシステムの傘をテレビにも広げる」形で行われるAppleTV ◯
-NULL 995 満を持して登場する名実ともに「テレビを再発明する」新AppleTV ◯
-NULL 996  ◯
-NULL 997  ◯
+NULL 999 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、ApplePencil、多彩な製品が披露された新しいAppleTV ◯
+NULL 1000 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、新しいAppleTVといった多彩な製品が披露されたApplePencil ◯
+NULL 1001  ◯
+NULL 1002 そしてiPadPro専用の入力ペンであるApplePencil ◯
+NULL 1003 またAppleならではのこだわりとして、「指によるタッチ操作は明確に区別して、両者を混在にした新しいUIデザインを作っているApplePencil ×
+NULL 1004 メールなどApple純正アプリだけでなく、MicrosoftのWordやExcel、PowerPointに手書きメモや図形を書き加えるApplePencil ◯
+NULL 1005 内部に専用センサーを搭載して、高精度な書き心地を実現しているApplePencil ◯
+NULL 1006  ◯
+NULL 1007 「テレビを再発明する」新AppleTV ◯
+NULL 1008 その言葉とともに、スクリーンに映し出されるAppleTV ◯
+NULL 1009  ◯
+NULL 1010 「アプリ」を軸にテレビを変えるAppleTV ◯
+NULL 1011 その戦略製品という考えである新AppleTV ◯
+NULL 1012 実際、今回発表されたその重責を担うに遜色ないできばえである第4世代AppleTV ×
+NULL 1013 リモコンが基本UIとなるのはこれまでと同様だが、タッチ操作を実現するTouchSurfaceを搭載、音声入力Siriへの対応、ジャイロセンサーや加速度センサーにも対応した今回のAppleTV ◯
+NULL 1014 これによりiPhoneやiPadに近い操作感覚を実現している新しいAppleTV ◯
+NULL 1015 新たにiOSベースのtvOSが用意され、さまざまなアプリが開発・配布できるAppleTV ◯
+NULL 1016 これまでもHuluなど一部の動画配信サービスはサポートしていたが、今後はより自由にAppleTV向けにアプリを開発し、サービスを提供できるAppleTV ◯
+NULL 1017 これまでもHuluなど一部の動画配信サービスはAppleTV側でサポートしていたが、今後はより自由にアプリを開発し、サービスを提供できるAppleTV ◯
+NULL 1018 すでにNETFLIX、Huluなどが名乗りをあげているが、例えば日本では、ドコモがアプリさえ用意すれば、「dTV」や「dアニメストア」などを提供するAppleTV ×
+NULL 1019 このようにローカルなコンテンツ配信サービスでも、アプリを通じてサービス展開できるAppleTV ◯
+NULL 1020  ◯
+NULL 1021 GameCenterでユーザー認証を行うことで、iPhone/iPadでプレイ中のゲームの続きを、行うAppleTV ◯
+NULL 1022 スマートテレビは多くのテレビメーカーが模索し、様々な提案が行われている分野だが、「iPhone/iPadで培ったエコシステムの傘をテレビにも広げる」形で行われるAppleTV ◯
+NULL 1023 満を持して登場する名実ともに「テレビを再発明する」新AppleTV ◯
+NULL 1024  ◯
+NULL 1025  ◯
