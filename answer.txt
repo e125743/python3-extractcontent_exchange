@@ -1,6 +1,6 @@
 NULL 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、ApplePencil、多彩な製品が披露された新しいAppleTV ◯
 NULL 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、新しいAppleTVといった多彩な製品が披露されたApplePencil ◯
-NULL  ◯
+NULL そして、大画面化に並ぶiPadProの特徴となるのが、UIにおける新提案「SmartKeyboard」と「ApplePencil」である ○
 NULL そしてiPadPro専用の入力ペンであるApplePencil ◯
 NULL またAppleならではのこだわりとして、「指によるタッチ操作は明確に区別して、両者を混在にした新しいUIデザインを作っているApplePencil ×
 NULL メールなどApple純正アプリだけでなく、MicrosoftのWordやExcel、PowerPointに手書きメモや図形を書き加えるApplePencil ◯
@@ -8,7 +8,7 @@ NULL 内部に専用センサーを搭載して、高精度な書き心地を実
 NULL  ◯
 NULL 「テレビを再発明する」新AppleTV ◯
 NULL その言葉とともに、スクリーンに映し出されるAppleTV ◯
-NULL  ◯
+NULL 2012年以来3年ぶりにリニューアルされた新AppleTVである ◯
 NULL 「アプリ」を軸にテレビを変えるAppleTV ◯
 NULL その戦略製品という考えである新AppleTV ◯
 NULL 実際、今回発表されたその重責を担うに遜色ないできばえである第4世代AppleTV ×

@@ -255,6 +255,7 @@ class AnalysisContent(object):
               #tokenに特定の文要素（deltoken）が存在
               if deltoken in chunkdic[chunkid][tokenid][0]:
                 #print("token:%s" % chunkdic[chunkid][tokenid])
+
                 #TokenGroupesからtokenIDを削除
                 TokenGroupes[chunkid].remove(tokenid)
               #tokenに特定の文要素（deltoken）が不存在
@@ -514,30 +515,41 @@ class AnalysisContent(object):
                       if chunk[tokenid][1].endswith("だ") is True:
                         #「だ」を「である」に変更
                         chunk[tokenid][1] = "である"
+                        print("token:%s" % chunk[tokenid])
 
-                    #興味キーワードの係り受け先の終点から興味キーワードの間の
-                    #tokenIDを移動する興味キーワードのtoken数だけ減少
-                    if keytokenEnd < tokenid <= int(endtokenid):
-                      setid = tokenid + keytokenFirst - keytokenEnd - 1
-                    #移動する興味キーワードのtokenIDを
-                    #興味キーワードの係り受け先の終点の後ろに調整
-                    elif keytokenFirst <= tokenid <= keytokenID[i]:
-                      setid = endtokenid + tokenid - keytokenEnd
-                    #興味キーワードより前のtokenIDは同値
-                    elif tokenid < keytokenFirst:
-                      setid = tokenid
-                    #興味キーワードの係り受け先の終点より後ろは削除
-                    else:
-                      continue
-                    """
-                    elif keytokenID[i] < tokenid <= keytokenEnd or endtokenid < tokenid:
-                      break
-                    else:
-                      setid = tokenid + keychunkID[i] - keytokenEnd
-                    """
+                    #興味キーワードが含まれるchunkの最後のtokenと
+                    #興味キーワードの係り受け先の終点が異値
+                    if keytokenEnd != int(endtokenid):
+                      #興味キーワードの係り受け先の終点から興味キーワードの間の
+                      #tokenIDを移動する興味キーワードのtoken数だけ減少
+                      if keytokenEnd < tokenid <= int(endtokenid):
+                        setid = tokenid + keytokenFirst - keytokenEnd - 1
+                      #移動する興味キーワードのtokenIDを
+                      #興味キーワードの係り受け先の終点の後ろに調整
+                      elif keytokenFirst <= tokenid <= keytokenID[i]:
+                        setid = endtokenid + tokenid - keytokenEnd
+                      #興味キーワードより前のtokenIDは同値
+                      elif tokenid < keytokenFirst:
+                        setid = tokenid
+                      #興味キーワードの係り受け先の終点より後ろは削除
+                      else:
+                        continue
+                      """
+                      elif keytokenID[i] < tokenid <= keytokenEnd or endtokenid < tokenid:
+                        break
+                      else:
+                        setid = tokenid + keychunkID[i] - keytokenEnd
+                      """
                     
-                    #書き換えた順番でtokenを保存
-                    upToken[setid] = chunk[tokenid][1]
+                      #書き換えた順番でtokenを保存
+                      upToken[setid] = chunk[tokenid][1]
+
+                    #興味キーワードが含まれるchunkの最後のtokenと
+                    #興味キーワードの係り受け先の終点が同値
+                    else:
+                      
+                      #書き換えず、そのままの順番でtokenを保存
+                      upToken[tokenid] = chunk[tokenid][1]
 
               print("upToken:%s" % upToken)
               #print("upToken:%s" % sorted(upToken.items()))
