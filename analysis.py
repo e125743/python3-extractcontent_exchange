@@ -306,6 +306,7 @@ class AnalysisContent(object):
           keytokenEnd = TokenGroupes[id][-1]
           #興味キーワードが含まれているchunkの最初のtokenIDを取得
           keytokenFirst = TokenGroupes[id][0]
+          keyrearchunkID = id
 
           #興味キーワードの前にchunkが存在
           if id != 0:
@@ -321,6 +322,8 @@ class AnalysisContent(object):
               keytokenFirst = TokenGroupes[id - 1][0]
               print("keyFirst:%s" % keytokenFirst)
 
+          #興味キーワードの後ろの単語のtokenIDを取得
+          keyrearID = int(keytokenID[i]) + 1
           #chunk内の興味キーワードの直後のtokenを取得成功
           try:
             keyrear = keychunk[int(keytokenID[i]) + 1]
@@ -335,6 +338,8 @@ class AnalysisContent(object):
 
               #興味キーワードの後ろが空
               keyrear = []
+              keyrearID = 0
+              keyrearchunkID = 0
 
             #興味キーワードを含むchunkが文中
             else:
@@ -342,8 +347,12 @@ class AnalysisContent(object):
               keychunk = chunkdic[int(id) + 1]
               #興味キーワードの後ろのtokenを取得
               keyrear = keychunk[int(keytokenID[i]) + 1]
+              #興味キーワードの後ろの単語が含まれるchunkIDを取得
+              keyrearchunkID = id + 1
 
           print("keyrear:%s" % keyrear)
+          print("keyrearID:%s" % keyrearID)
+          print("keyrearchunkID:%s" % keyrearchunkID)
 
           #deltoken = '記号'
           #chunkdic,TokenGroupes = AnalysisContent.deleteToken(chunkdic, TokenGroupes, deltoken)
@@ -442,6 +451,34 @@ class AnalysisContent(object):
             #興味キーワードの後ろが「の」以外
             else:
               print("not:%s" % keyrear[1])
+              #興味キーワードの後ろが連語
+              if '連語' in keyrear[0]:
+                print("series:%s" % keyrear[1])
+                #連語の後ろが名詞だったら、名詞を含むchunkを削除
+                while True:
+                  #連語の後ろのtokenを取得
+                  try:
+                    seriesName = chunkdic[keyrearchunkID][keyrearID + 1]
+                  #取得に失敗したら、調べているchunkを後退
+                  except:
+                    keyrearchunkID += 1
+                    continue
+
+                  #連語の後ろが名詞か名詞群
+                  if '形容動詞語幹' not in seriesName[0] and '名詞' in seriesName[0]:
+                    #keytokenID[i] = keyrearID + 1
+                    #名詞がkeytokenEndより後ろ
+                    if keytokenEnd < keyrearID + 1:#keytokenID[i]:
+                      #連語の後ろの名詞が含まれるchunkの最後のtokenをkeytokenEndに設定
+                      keytokenEnd = TokenGroupes[keyrearchunkID][-1]
+                    #調べているtokenを後退
+                    keyrearID += 1
+                    continue
+                  #調べているtokenが名詞以外なら解析終了
+                  else:
+                    print("seriesName:%s" % seriesName[1])
+                    break
+
               #endtokenid = 0
 
               #興味キーワードが存在するchunkと、
