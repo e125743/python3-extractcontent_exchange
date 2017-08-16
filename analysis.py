@@ -179,7 +179,7 @@ class AnalysisContent(object):
             #endflagが1の時、そのtokenを興味キーワードの係り受け先の終点に決定
             if endflag == 1:
               print("endtoken:%s" % alltext)
-              print("%s" % endflag)
+              print("endflag:%s" % endflag)
               endtokenid = id
 
             #単語が「だ」、「である」時、
@@ -199,6 +199,16 @@ class AnalysisContent(object):
               print("max:%s" % keys[-2])
               if '記号' in chunkdic[chunkid][endtokenid + 1][0]:
                 endtokenid = endtokenid + 1
+              elif '名詞' in chunkdic[chunkid][endtokenid + 1][0] and '非自立' not in chunkdic[chunkid][endtokenid + 1][0]:
+                endtokenid = 0
+            else:
+              try:
+                rearWord = chunkdic[chunkid + 1][endtokenid + 1]
+              except:
+                continue
+              if '名詞' in rearWord[0] and '非自立' not in rearWord[0]:
+                print("rearName:%s" % rearWord[1])
+                endtokenid = 0
 
         #係り受け先の終点になる単語のまとめ
         #1.基本形の自立語の動詞
@@ -206,6 +216,7 @@ class AnalysisContent(object):
         #3.連用形の自立語の後の基本形の動詞
         #4.単語「だ」と「である」
         #5.1~4の後ろが記号
+        print("kakunin:%s" % endtokenid)
         return (endtokenid, sentenceEnd)
 
 
@@ -404,7 +415,7 @@ class AnalysisContent(object):
                         #係り受け関係の間にあるchunkIDを取得
                         rearLast.extend(list(filter((lambda x: beginid < x < lastid), RelateGroupe)))
 
-                      print("%s" % sorted(set(rearLast), reverse=True))
+                      print("Interval:%s" % sorted(set(rearLast), reverse=True))
 
                       #係り受け関係の間にあるchunkIDを逆順で分割
                       for chunkid in sorted(set(rearLast), reverse=True):
@@ -510,6 +521,7 @@ class AnalysisContent(object):
               #主体とする動詞の終止形が無い場合を処理
               #興味キーワードの係り受け先の終点が未決定
               if endtokenid == 0:
+                print("notEndToken")
                 #係り受け関係にあるchunkID群を分割
                 for Groupe in RelateGroupes:
                   #興味キーワードが存在しない係り受け関係のchunk

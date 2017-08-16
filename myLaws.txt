@@ -1,0 +1,26 @@
+NULL 1197 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、ApplePencil、多彩な製品が披露された新しいAppleTV ◯
+NULL 1198 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、新しいAppleTVといった多彩な製品が披露されたApplePencil ◯
+NULL 1199 そして、大画面化に並ぶiPadProの特徴となるのが、UIにおける新提案「SmartKeyboard」と「ApplePencil」である ○
+NULL 1200 そしてiPadPro専用の入力ペンであるApplePencil ◯
+NULL 1201 またAppleならではのこだわりとして、「指によるタッチ操作は明確に区別して、両者を混在にした新しいUIデザインを作っているApplePencil ×
+NULL 1202 メールなどApple純正アプリだけでなく、MicrosoftのWordやExcel、PowerPointに手書きメモや図形を書き加えるApplePencil ◯
+NULL 1203 内部に専用センサーを搭載して、高精度な書き心地を実現しているApplePencil ◯
+NULL 1204  ◯
+NULL 1205 「テレビを再発明する」新AppleTV ◯
+NULL 1206 その言葉とともに、スクリーンに映し出されるAppleTV ◯
+NULL 1207 2012年以来3年ぶりにリニューアルされた新AppleTVである ◯
+NULL 1208 「アプリ」を軸にテレビを変えるAppleTV ◯
+NULL 1209 その戦略製品という考えである新AppleTV ◯
+NULL 1210 実際、今回発表されたその重責を担うに遜色ないできばえである第4世代AppleTV ×
+NULL 1211 リモコンが基本UIとなるのはこれまでと同様だが、タッチ操作を実現するTouchSurfaceを搭載、音声入力Siriへの対応、ジャイロセンサーや加速度センサーにも対応した今回のAppleTV ◯
+NULL 1212 これによりiPhoneやiPadに近い操作感覚を実現している新しいAppleTV ◯
+NULL 1213 新たにiOSベースのtvOSが用意され、さまざまなアプリが開発・配布できるAppleTV ◯
+NULL 1214 これまでもHuluなど一部の動画配信サービスはサポートしていたが、今後はより自由にAppleTV向けにアプリを開発し、サービスを提供できるAppleTV ◯
+NULL 1215 これまでもHuluなど一部の動画配信サービスはAppleTV側でサポートしていたが、今後はより自由にアプリを開発し、サービスを提供できるAppleTV ◯
+NULL 1216 すでにNETFLIX、Huluなどが名乗りをあげているが、例えば日本では、ドコモがアプリさえ用意すれば、「dTV」や「dアニメストア」などを提供するAppleTV ×
+NULL 1217 このようにローカルなコンテンツ配信サービスでも、アプリを通じてサービス展開できるAppleTV ◯
+NULL 1218 GameCenterでユーザー認証を行うことで、iPhone/iPadでプレイ中のゲームの続きを、行うAppleTV ◯
+NULL 1219 スマートテレビは多くのテレビメーカーが模索し、様々な提案が行われている分野だが、「iPhone/iPadで培ったエコシステムの傘をテレビにも広げる」形で行われるAppleTV ◯
+NULL 1220 満を持して登場する名実ともに「テレビを再発明する」新AppleTV ◯
+NULL 1221  ◯
+NULL 1222  ◯
