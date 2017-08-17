@@ -191,21 +191,30 @@ class AnalysisContent(object):
               print("endtoken:%s" % alltext)
               endtokenid = id
 
-          #係り受け先の終点の後ろが記号だった場合、その記号を終点に決定
           if endtokenid != 0:
             keys = sorted(chunkdic[chunkid].keys())
+            #係り受け先の終点の後ろが興味キーワードと同じチャンクに存在
             if keys[-2] > endtokenid:
               print("keys:%s" % keys)
               print("max:%s" % keys[-2])
+              #係り受け先の終点の後ろが記号だった場合、その記号を終点に決定
               if '記号' in chunkdic[chunkid][endtokenid + 1][0]:
                 endtokenid = endtokenid + 1
+              #係り受け先の終点の後ろが名詞の非自立だった場合、
+              #係り受け先の終点を削除
               elif '名詞' in chunkdic[chunkid][endtokenid + 1][0] and '非自立' not in chunkdic[chunkid][endtokenid + 1][0]:
                 endtokenid = 0
+            #係り受け先の終点の後ろが興味キーワードと同じチャンクに未存在
             else:
+              #係り受け先の終点の後ろが興味キーワードを含むチャンクの
+              #直後のチャンクに存在
               try:
                 rearWord = chunkdic[chunkid + 1][endtokenid + 1]
+              #係り受け先の終点が文末
               except:
                 continue
+              #係り受け先の終点の後ろが名詞の非自立だった場合、
+              #係り受け先の終点を削除
               if '名詞' in rearWord[0] and '非自立' not in rearWord[0]:
                 print("rearName:%s" % rearWord[1])
                 endtokenid = 0
