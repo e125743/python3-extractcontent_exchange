@@ -2,7 +2,7 @@ NULL 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPa
 NULL 2015年のApple新商品発表会では、iPhone6s/6sPlusをはじめ、iPadPro、新しいAppleTVといった多彩な製品が披露されたApplePencil ◯
 NULL そして、大画面化に並ぶiPadProの特徴となるのが、UIにおける新提案「SmartKeyboard」と「ApplePencil」である ○
 NULL そしてiPadPro専用の入力ペンであるApplePencil ◯
-NULL またAppleならではのこだわりとして、「指によるタッチ操作は明確に区別して、両者を混在にした新しいUIデザインを作っているApplePencil ×
+NULL またAppleならではのこだわりとして、「指によるタッチ操作と明確に区別して、両者を混在にした新しいUIデザインを作っている」ApplePencil ×
 NULL メールなどApple純正アプリだけでなく、MicrosoftのWordやExcel、PowerPointに手書きメモや図形を書き加えるApplePencil ◯
 NULL 内部に専用センサーを搭載して、高精度な書き心地を実現しているApplePencil ◯
 NULL  ◯
