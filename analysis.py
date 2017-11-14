@@ -441,7 +441,7 @@ class AnalysisContent(object):
                       print("Interval:%s" % sorted(set(rearLast), reverse=True))
 
                       #係り受け関係の間にあるchunkIDを逆順で分割
-                      for chunkid in sorted(set(rearLast), reverse=True):
+                      for chunkid in sorted(set(rearLast)):#, reverse=True):
 
                         #興味キーワードの係り受け先の終点が未決定
                         if endtokenid == 0:
